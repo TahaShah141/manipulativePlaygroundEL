@@ -1,3 +1,1 @@
-type BlockData = {
-  type: "ONES" | "TENS" | "HUNDREDS" 
-}
+export type Blocks = (number | number[])[]
