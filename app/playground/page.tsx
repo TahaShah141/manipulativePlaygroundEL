@@ -7,8 +7,14 @@ import { Blocks } from '@/lib/types';
 import { Sandbox } from './Sandbox';
 import { Tray } from './Tray';
 import { Sidebar } from './Sidebar';
+import { selectMainState } from '@/lib/redux/store';
+import { MainState, useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import { testSlice } from '@/lib/redux/slices/mainSlice';
 
 export default function Playground() {
+
+  const { selected } = MainState()
+  const dispatch = useAppDispatch()
 
   const [blocks, setBlocks] = useState<number[]>([])
   const [displayBlocks, setDisplayBlocks] = useState<Blocks>([])
@@ -41,6 +47,7 @@ export default function Playground() {
     const type = active.data.current.type
 
     setBlocks(i => [...i, type === "ONES" ? 1 : type === "TENS" ? 10 : 100])
+    dispatch(testSlice("Hello World"))
   }
 
   const deleteBlock = (num: number) => {
