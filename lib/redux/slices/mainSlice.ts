@@ -1,5 +1,6 @@
-import { Block, Blocks, BlockTypes } from "@/lib/types";
-import { getType, randomNumbers } from "@/lib/utils";
+import { Block, BlockTypes } from "@/lib/types";
+import { getNum, getType, randomNumbers, splitBlock } from "@/lib/utils";
+import { UniqueIdentifier } from "@dnd-kit/core";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as randomID } from "uuid"
 
@@ -21,10 +22,9 @@ export const MainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
-    testSlice: (state, action: PayloadAction<string | number | undefined>) => {
-      console.log(action.payload)
-      console.log({state})
-      return state
+    selectBlock: (state, action: PayloadAction<{id: UniqueIdentifier}>) => {
+      const { id } = action.payload
+      state.blocks = state.blocks.map(b => b.id !== id ? b : {...b, selected: !b.selected})
     },
 
     toggleSorting: (state) => {
@@ -51,6 +51,7 @@ export const MainSlice = createSlice({
           id: randomID(),
           disabled: false,
           selected: false,
+          source: "sandbox",
           type: getType(num)
         }
       })
@@ -62,22 +63,49 @@ export const MainSlice = createSlice({
         id: randomID(),
         type,
         selected: false,
-        disabled: false
+        disabled: false,
+        source: "sandbox"
       }
       state.blocks.push(toAdd)
+    },
+
+    splitSelected: (state) => {
+      state.blocks = state.blocks.map(b => !b.selected || b.type === "ONES" ? ({...b, selected: false}) : splitBlock(b)).flat()
+    },
+
+    groupSelected: (state, action: PayloadAction<{type: BlockTypes}>) => {
+      state.blocks = state.blocks.filter(b => !b.selected).concat([{
+        id: randomID(),
+        type: action.payload.type,
+        selected: false,
+        disabled: false,
+        source: "sandbox"
+      }])
+    },
+
+    clearSelected: (state) => {
+      state.blocks = state.blocks.map(b => ({...b, selected: false}))
+    },
+
+    deleteSelected: (state) => {
+      state.blocks = state.blocks.filter(b => !b.selected)
     }
   }
 })
 
 
 export const { 
-  testSlice, 
+  selectBlock, 
   newBlock, 
   clearBoard,
   randomizeBoard,
   toggleSorting, 
   toggleDisplay, 
-  toggleGrouping
+  toggleGrouping,
+  splitSelected,
+  groupSelected,
+  clearSelected,
+  deleteSelected
 } = MainSlice.actions
 
 export default MainSlice.reducer

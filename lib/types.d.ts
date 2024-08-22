@@ -6,6 +6,7 @@ export type Block = {
   type: BlockTypes
   selected: boolean
   disabled: boolean
+  source: string
 }
 
 export type Blocks = (Block | Block[])[]

@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@/lib/redux/hooks"
+import { selectBlock } from "@/lib/redux/slices/mainSlice"
 import { Block } from "@/lib/types"
 import { DraggableAttributes, UniqueIdentifier, useDraggable } from "@dnd-kit/core"
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
@@ -16,13 +18,13 @@ type BlockProps = {
 
 const OnesBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners, style, isDragging}, ref) => {
   return (
-    <div ref={ref} {...attributes} {...listeners} style={style} className={`flex justify-center items-center size-7 transition-colors duration-300 border-2 border-black rounded-sm ${isDragging ? "bg-neutral-200" : "bg-brown"}`}></div>
+    <div ref={ref} {...attributes} {...listeners} style={style} className={`flex justify-center items-center size-7 transition-colors duration-300 border-2 border-black rounded-md ${isDragging ? "bg-neutral-200" : "bg-brown"}`}></div>
   )
 })
 
 const TensBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners, style, isDragging}, ref) => {
   return (
-    <div ref={ref} {...attributes} {...listeners} style={style} className={`flex flex-col transition-colors duration-300 rounded-sm border border-black overflow-hidden ${isDragging ? "bg-blue-200" : "bg-blue-500"}`}>
+    <div ref={ref} {...attributes} {...listeners} style={style} className={`flex flex-col transition-colors duration-300 rounded-md border border-black overflow-hidden ${isDragging ? "bg-blue-200" : "bg-blue-500"}`}>
       {Array.from({length: 10}, (_, i) => (
         <div key={i} className="size-7 border-black border" />
       ))}
@@ -32,7 +34,7 @@ const TensBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners
 
 const HundredsBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners, style, isDragging}, ref) => {
   return (
-    <div ref={ref} {...attributes} {...listeners} style={style} className={`grid grid-cols-10 grid-rows-10 transition-colors duration-300 rounded-sm border-black border-2 overflow-hidden ${isDragging ? "bg-yellow-100" : "bg-yellow-300"}`}>
+    <div ref={ref} {...attributes} {...listeners} style={style} className={`grid grid-cols-10 grid-rows-10 transition-colors duration-300 rounded-md border-black border-2 overflow-hidden ${isDragging ? "bg-yellow-100" : "bg-yellow-300"}`}>
       {Array.from({length: 100}, (_, i) => (
         <div key={i} className="size-7 border-black border" />
       ))}
@@ -42,11 +44,13 @@ const HundredsBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, liste
 
 export const BaseTenBlock: React.FC<BaseTenBlockProps> = ({ block }) => {
 
-  const { id, selected, type } = block
+  const { id, selected, source, type } = block
+  const dispatch = useAppDispatch()
   const { attributes, listeners, setNodeRef: dragRef, transform, isDragging } = useDraggable({
     id, 
     data: {
-      type
+      type,
+      source
     }
   })
 
@@ -63,7 +67,7 @@ export const BaseTenBlock: React.FC<BaseTenBlockProps> = ({ block }) => {
   }
 
   return (
-    <div className="relative">
+    <div onClick={() => dispatch(selectBlock({id}))} className={`h-fit ${selected ? "ring-2 ring-white" : ""}`}>
       {type === "ONES" && <OnesBlock {...blockProps} />}
       {type === "TENS" && <TensBlock {...blockProps} />}
       {type === "HUNDREDS" && <HundredsBlock {...blockProps} />}

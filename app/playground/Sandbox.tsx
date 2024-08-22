@@ -25,7 +25,7 @@ export const Sandbox: React.FC<SandboxProps> = () => {
   return (
 
     <ScrollArea ref={dropRef} className={`h-[calc(100vh-64px)] rounded-lg p-4 flex-1 ${isOver ? "bg-neutral-700" : "bg-neutral-800"}`}>
-      <div className={`rounded-lg flex flex-col`}>
+      <div className={`p-1 flex flex-col`}>
         <div className='gap-2 flex flex-wrap'>
           {displayBlocks.map((block, i) => {
             if (block instanceof Array) {

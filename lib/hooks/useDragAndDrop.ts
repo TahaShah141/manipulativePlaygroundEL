@@ -17,7 +17,7 @@ export const useDragAndDrop = () => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
-    if (!active.data.current || !over) return;
+    if (!active.data.current || !over || over.id === active.data.current.source) return;
 
     const type = active.data.current.type
 

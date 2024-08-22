@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Block, Blocks, BlockTypes } from "./types";
+import { v4 as randomID } from "uuid"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -68,4 +69,18 @@ export const getWholeSum = (blocks: Blocks): number => {
     } else sum += getNum(block.type)
   }
   return sum
+}
+
+export const getSelected = (blocks: Block[]): Block[] => {
+  return blocks.filter(block => block.selected)
+}
+
+export const splitBlock = (block: Block): Block[] => {
+  return Array.from({length: 10}, () => ({
+    id: randomID(),
+    type: getType(getNum(block.type)/10),
+    selected: false,
+    disabled: false,
+    source: block.source
+  }))
 }
