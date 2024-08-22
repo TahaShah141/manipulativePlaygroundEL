@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Blocks } from "./types";
+import { Block, Blocks, BlockTypes } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -14,26 +14,29 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   return array;
 }
 
-export const groupOnes = (blocks: number[], bound: number): Blocks => {
+export const groupOnes = (blocks: Block[], bound: number = 10): Blocks => {
 
   let result: Blocks = []
   let count = 0
+  let toAdd: Block[] = []
 
-  for (let num of blocks) {
-    if (num === 1) {
+  for (let block of blocks) {
+    if (block.type === "ONES") {
+      toAdd.push(block)
       count++
     }
     if (count === bound) {
-      result.push(Array(bound).fill(1))
+      result.push(toAdd)
       count = 0
+      toAdd = []
     } 
   }
-  if (count !== 0) result.push(Array(count).fill(1))
+  if (count !== 0) result.push(toAdd)
   
-  return result.concat(blocks.filter(n => n !== 1))
+  return result.concat(blocks.filter(n => n.type !== "ONES"))
 }
 
-export const randomizeBoard = (): number[] => {
+export const randomNumbers = (): number[] => {
   const newBlocks = []
   const ones = Math.floor(Math.random() * 40) + 1
   const tens = Math.floor(Math.random() * 15) + 1
@@ -42,4 +45,27 @@ export const randomizeBoard = (): number[] => {
   newBlocks.push(Array(tens).fill(10))
   newBlocks.push(Array(hundreds).fill(100))
   return shuffleArray(newBlocks.flat())
+}
+
+export const getNum = (type: BlockTypes): number => {
+  if (type === "ONES") return 1
+  else if (type === "TENS") return 10
+  else if (type === "HUNDREDS") return 100
+  else return -1
+}
+
+export const getType = (num: number): BlockTypes => {
+  if (num === 1) return "ONES"
+  else if (num === 10) return "TENS"
+  else return "HUNDREDS"
+}
+
+export const getWholeSum = (blocks: Blocks): number => {
+  let sum = 0
+  for (let block of blocks) {
+    if (block instanceof Array) {
+      sum += getWholeSum(block)
+    } else sum += getNum(block.type)
+  }
+  return sum
 }
