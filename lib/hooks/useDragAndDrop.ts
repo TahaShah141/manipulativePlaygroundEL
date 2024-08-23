@@ -23,8 +23,8 @@ export const useDragAndDrop = () => {
 
     const type = active.data.current.type
 
-    dispatch(newBlock({ type }))
-    
+    dispatch(newBlock({ type, source: over.id.toString() }))
+
   }
 
   return { sensors, handleDragEnd }

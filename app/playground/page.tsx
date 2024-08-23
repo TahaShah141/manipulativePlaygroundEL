@@ -7,6 +7,7 @@ import { Sidebar } from './Sidebar';
 import { useDragAndDrop } from '@/lib/hooks/useDragAndDrop';
 import { MainState } from '@/lib/redux/hooks';
 import { Trivia } from './Trivia';
+import { BasicMath } from './BasicMath';
 
 export default function Playground() {
 
@@ -19,6 +20,7 @@ export default function Playground() {
         <Sidebar/>
         {mode === 'sandbox' && <Sandbox />}
         {mode === 'trivia' && <Trivia />}
+        {mode === 'basic maths' && <BasicMath />}
         <Tray />
       </div>
     </DndContext>

@@ -11,7 +11,8 @@ interface MemoState {
   display: boolean
   mode: string
   role?: "text" | "board"
-  question?: number | Block[]
+  question?: number | Block[] | [number, number] | [Block[], Block[]]
+  operator?: "+" | "-" | "*" | "/"
 }
 
 const initialState: MemoState = {
@@ -61,14 +62,14 @@ export const MainSlice = createSlice({
       })
     },
 
-    newBlock: (state, action: PayloadAction<{type: BlockTypes}>) => {
-      const { type } = action.payload
+    newBlock: (state, action: PayloadAction<{type: BlockTypes, source: string}>) => {
+      const { type, source } = action.payload
       const toAdd: Block = {
         id: randomID(),
         type,
+        source,
         selected: false,
         disabled: false,
-        source: state.mode
       }
       state.blocks.push(toAdd)
     },
@@ -77,13 +78,14 @@ export const MainSlice = createSlice({
       state.blocks = state.blocks.map(b => !b.selected || b.type === "ONES" ? ({...b, selected: false}) : splitBlock(b)).flat()
     },
 
-    groupSelected: (state, action: PayloadAction<{type: BlockTypes}>) => {
+    groupSelected: (state, action: PayloadAction<{type: BlockTypes, source: string}>) => {
+      const { type, source } = action.payload
       state.blocks = state.blocks.filter(b => !b.selected).concat([{
         id: randomID(),
-        type: action.payload.type,
+        type,
+        source,
         selected: false,
         disabled: false,
-        source: state.mode
       }])
     },
 
@@ -102,15 +104,22 @@ export const MainSlice = createSlice({
       if (mode === 'trivia') {
         state.role = "board"
         state.question = Math.floor(Math.random() * 1000) + 1
+      } else if (mode === "basic maths") {
+        state.role = "board"
+        const num1 = Math.floor(Math.random() * 500) + 1
+        const num2 = Math.floor(Math.random() * 500) + 1
+        state.question = [Math.max(num1, num2), Math.min(num1, num2)]
+        state.operator = "+"
       }
     },
     
     switchRole: (state) => {
-      const role = state.role === 'board' ? 'text' : 'board'
-      state.role = role
-      if (role === "board") {
+      const { mode, role } = state
+      if (mode === 'trivia' && role === "text") {
+        state.role = 'board'
         state.question = Math.floor(Math.random() * 1000) + 1
-      } else {
+      } else if (mode === 'trivia' && role === 'board') {
+        state.role = "text"
         const numbers = randomNumbers()
 
         state.question = numbers.map((num) => {
@@ -122,14 +131,21 @@ export const MainSlice = createSlice({
             type: getType(num)
           }
         })
+      } else if (mode === 'basic maths') {
+        state.operator = state.operator === '+' ? '-' : '+'
       }
     },
 
     nextQuestion: (state) => {
-      const role = state.role
+      const { role, mode } = state
 
       if (role === "board") {
-        state.question = Math.floor(Math.random() * 1000) + 1
+        if (mode === 'trivia') state.question = Math.floor(Math.random() * 1000) + 1
+        else if (mode === 'basic maths') {
+          const num1 = Math.floor(Math.random() * 500) + 1
+          const num2 = Math.floor(Math.random() * 500) + 1
+          state.question = [Math.max(num1, num2), Math.min(num1, num2)]
+        }
       } else {
         const numbers = randomNumbers()
 
