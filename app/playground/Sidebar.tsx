@@ -1,25 +1,45 @@
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { MainState, useAppDispatch } from "@/lib/redux/hooks"
-import { clearBoard, clearSelected, deleteSelected, groupSelected, randomizeBoard, splitSelected, toggleDisplay, toggleGrouping, toggleSorting } from "@/lib/redux/slices/mainSlice"
+import { clearBoard, clearSelected, deleteSelected, groupSelected, nextQuestion, randomizeBoard, setMode, splitSelected, switchRole, toggleDisplay, toggleGrouping, toggleSorting } from "@/lib/redux/slices/mainSlice"
+import { Block } from "@/lib/types"
 import { getNum, getType, getWholeSum } from "@/lib/utils"
+import { useState } from "react"
 
 type SidebarProps = {
 }
 
+const modes = [
+  "sandbox",
+  "trivia",
+  "basic maths",
+  "advanced maths",
+]
+
 export const Sidebar: React.FC<SidebarProps> = () => {
 
-  const { display, blocks, sorting, grouping } = MainState()
+  const { display, blocks, sorting, grouping, mode, role, question } = MainState()
   const dispatch = useAppDispatch()
 
+  const [triviaAnswer, setTriviaAnswer] = useState(0)
+
   const selectedBlocks = blocks.filter(b => b.selected)
+  const isCorrectAnswer = (role === 'board' && getWholeSum(blocks) === question as number) || (role === 'text' && triviaAnswer === getWholeSum(question as Block[]))
 
   return (
     <div className="flex flex-col gap-4 justify-between h-full">
       <div className="bg-neutral-800 rounded-lg flex flex-col gap-4 p-4 w-96">
         <h1 className='text-3xl font-bold font-mono text-white text-center'>Base-10 Blocks</h1>
-        <h4 className={`text-center text-7xl font-mono ${!display && "text-neutral-700"}`}>{!display ? "???" : getWholeSum(blocks)}</h4>
+        {(mode === 'sandbox') && <h4 className={`text-center text-7xl font-mono ${!display && "text-neutral-700"}`}>{!display ? "???" : getWholeSum(blocks)}</h4>}
+        {(mode === 'trivia' && role === 'board') && <h4 className={`text-center text-7xl font-mono ${isCorrectAnswer ? "text-green-500" : "text-red-500"}`}>{question as number}</h4>}
+        {(mode === 'trivia' && role === 'text') && <Input autoFocus type="number" value={triviaAnswer} onChange={e => setTriviaAnswer(parseInt(e.target.value))} className={`text-center h-fit p-1 text-5xl font-mono ${isCorrectAnswer ? "text-green-500" : "text-red-500"}`} />}
         <Button onClick={() => dispatch(clearBoard())}>Clear Board</Button>
-        <Button onClick={() => dispatch(randomizeBoard())}>Randomize</Button>
+        {mode === 'sandbox' && <Button onClick={() => dispatch(randomizeBoard())}>Randomize</Button>}
+        {mode === 'trivia' && 
+        <>
+          <Button className="flex-1" onClick={() => dispatch(switchRole())}>Switch</Button>
+          <Button className="flex-1" onClick={() => dispatch(nextQuestion())}>Next Question</Button>
+        </>}
       </div>
 
       <div className="bg-neutral-900 rounded-lg grid grid-cols-2 gap-4 p-4 w-96">
@@ -31,9 +51,15 @@ export const Sidebar: React.FC<SidebarProps> = () => {
       </div>
 
       <div className="bg-neutral-900 rounded-lg flex flex-col gap-4 p-4 w-96">
-        <Button variant={"secondary"} onClick={() => dispatch(toggleDisplay())}>{`${!display ? "Show" : "Hide"} Sum`}</Button>
+        {mode === 'sandbox' && <Button variant={"secondary"} onClick={() => dispatch(toggleDisplay())}>{`${!display ? "Show" : "Hide"} Sum`}</Button>}
         <Button variant={"secondary"} onClick={() => dispatch(toggleSorting())}>{`${sorting ? "Disable" : "Enable"} Sorting`}</Button>
         <Button variant={"secondary"} onClick={() => dispatch(toggleGrouping())}>{`${grouping ? "Disable" : "Enable"} Grouping`}</Button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 w-96">
+        {modes.map(m => 
+          <Button className="capitalize" key={m} variant={m === mode ? "default" : "outline"} onClick={() => dispatch(setMode({mode: m}))}>{m}</Button>
+        )}
       </div>
 
     </div>

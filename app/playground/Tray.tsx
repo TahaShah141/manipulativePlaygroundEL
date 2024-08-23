@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronUp } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BaseTenBlock } from '../components/custom/BaseTenBlock'
 
 type TrayProps = {
@@ -7,7 +7,11 @@ type TrayProps = {
 
 export const Tray: React.FC<TrayProps> = () => {
   
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => setOpen(true), 1000)
+  }, [])
 
   const defaultBlockOptions = {
     disabled: false,

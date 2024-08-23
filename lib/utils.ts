@@ -61,12 +61,13 @@ export const getType = (num: number): BlockTypes => {
   else return "HUNDREDS"
 }
 
-export const getWholeSum = (blocks: Blocks): number => {
+export const getWholeSum = (blocks: Block[]): number => {
   let sum = 0
   for (let block of blocks) {
-    if (block instanceof Array) {
-      sum += getWholeSum(block)
-    } else sum += getNum(block.type)
+    // if (block instanceof Array) {
+    //   sum += getWholeSum(block)
+    // } else 
+    sum += getNum(block.type)
   }
   return sum
 }

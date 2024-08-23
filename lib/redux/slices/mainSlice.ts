@@ -9,6 +9,9 @@ interface MemoState {
   sorting: boolean
   grouping: boolean
   display: boolean
+  mode: string
+  role?: "text" | "board"
+  question?: number | Block[]
 }
 
 const initialState: MemoState = {
@@ -16,6 +19,7 @@ const initialState: MemoState = {
   sorting: true,
   grouping: true,
   display: true,
+  mode: 'sandbox'
 }
 
 export const MainSlice = createSlice({
@@ -51,7 +55,7 @@ export const MainSlice = createSlice({
           id: randomID(),
           disabled: false,
           selected: false,
-          source: "sandbox",
+          source: state.mode,
           type: getType(num)
         }
       })
@@ -64,7 +68,7 @@ export const MainSlice = createSlice({
         type,
         selected: false,
         disabled: false,
-        source: "sandbox"
+        source: state.mode
       }
       state.blocks.push(toAdd)
     },
@@ -79,7 +83,7 @@ export const MainSlice = createSlice({
         type: action.payload.type,
         selected: false,
         disabled: false,
-        source: "sandbox"
+        source: state.mode
       }])
     },
 
@@ -89,6 +93,56 @@ export const MainSlice = createSlice({
 
     deleteSelected: (state) => {
       state.blocks = state.blocks.filter(b => !b.selected)
+    },
+
+    setMode: (state, action: PayloadAction<{mode: string}>) => {
+      const { mode } = action.payload
+      state.mode = mode
+      state.blocks = []
+      if (mode === 'trivia') {
+        state.role = "board"
+        state.question = Math.floor(Math.random() * 1000) + 1
+      }
+    },
+    
+    switchRole: (state) => {
+      const role = state.role === 'board' ? 'text' : 'board'
+      state.role = role
+      if (role === "board") {
+        state.question = Math.floor(Math.random() * 1000) + 1
+      } else {
+        const numbers = randomNumbers()
+
+        state.question = numbers.map((num) => {
+          return {
+            id: randomID(),
+            disabled: false,
+            selected: false,
+            source: state.mode,
+            type: getType(num)
+          }
+        })
+      }
+    },
+
+    nextQuestion: (state) => {
+      const role = state.role
+
+      if (role === "board") {
+        state.question = Math.floor(Math.random() * 1000) + 1
+      } else {
+        const numbers = randomNumbers()
+
+        state.question = numbers.map((num) => {
+          return {
+            id: randomID(),
+            disabled: false,
+            selected: false,
+            source: state.mode,
+            type: getType(num)
+          }
+        })
+      }
     }
   }
 })
@@ -105,7 +159,10 @@ export const {
   splitSelected,
   groupSelected,
   clearSelected,
-  deleteSelected
+  deleteSelected,
+  setMode,
+  switchRole,
+  nextQuestion
 } = MainSlice.actions
 
 export default MainSlice.reducer
