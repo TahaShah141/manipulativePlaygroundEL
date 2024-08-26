@@ -82,3 +82,16 @@ export const splitBlock = (block: Block): Block[] => {
     source: block.source
   }))
 }
+
+export const getBlocks = (n: number) => {
+  const num = n <= 0 ? -n : n
+  const newBlocks = []
+  const digits = num.toString().padStart(4, '0').split("")
+  const ones = +digits[digits.length - 1]
+  const tens = +digits[digits.length - 2]
+  const hundreds = (num - tens * 10 - ones) / 100
+  newBlocks.push(Array(ones).fill(1))
+  newBlocks.push(Array(tens).fill(10))
+  newBlocks.push(Array(hundreds).fill(100))
+  return shuffleArray(newBlocks.flat()) 
+}

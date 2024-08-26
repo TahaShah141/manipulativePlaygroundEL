@@ -14,7 +14,7 @@ export const Trivia: React.FC<TriviaProps> = () => {
   const { blocks, sorting, grouping, role, question } = MainState()
   const { isOver, setNodeRef: dropRef } = useDroppable({ id: 'trivia' })
 
-  const workingBlocks = role === 'board' ? blocks : question as Block[]
+  const workingBlocks = blocks
   const [displayBlocks, setDisplayBlocks] = useState<Blocks>(workingBlocks)
 
   useEffect(() => {

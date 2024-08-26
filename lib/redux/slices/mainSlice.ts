@@ -1,5 +1,5 @@
 import { Block, BlockTypes } from "@/lib/types";
-import { getNum, getType, randomNumbers, splitBlock } from "@/lib/utils";
+import { getType, randomNumbers, splitBlock } from "@/lib/utils";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as randomID } from "uuid"
@@ -11,7 +11,7 @@ interface MemoState {
   display: boolean
   mode: string
   role?: "text" | "board"
-  question?: number | Block[] | [number, number] | [Block[], Block[]]
+  question?: number | [number, number]
   operator?: "+" | "-" | "*" | "/"
 }
 
@@ -29,6 +29,7 @@ export const MainSlice = createSlice({
   reducers: {
     selectBlock: (state, action: PayloadAction<{id: UniqueIdentifier}>) => {
       const { id } = action.payload
+      if (state.role === 'text') return;
       state.blocks = state.blocks.map(b => b.id !== id ? b : {...b, selected: !b.selected})
     },
 
@@ -45,7 +46,7 @@ export const MainSlice = createSlice({
     },
 
     clearBoard: (state) => {
-      state.blocks = []
+      if (state.role !== 'text') state.blocks = []
     },
 
     randomizeBoard: (state) => {
@@ -115,22 +116,24 @@ export const MainSlice = createSlice({
     
     switchRole: (state) => {
       const { mode, role } = state
-      if (mode === 'trivia' && role === "text") {
-        state.role = 'board'
-        state.question = Math.floor(Math.random() * 1000) + 1
-      } else if (mode === 'trivia' && role === 'board') {
-        state.role = "text"
-        const numbers = randomNumbers()
-
-        state.question = numbers.map((num) => {
-          return {
-            id: randomID(),
-            disabled: false,
-            selected: false,
-            source: state.mode,
-            type: getType(num)
-          }
-        })
+      if (mode === 'trivia') {
+        if (role === 'text') {
+          state.role = 'board'
+          state.question = Math.floor(Math.random() * 1000) + 1
+        } else {
+          state.role = "text"
+          const numbers = randomNumbers()
+  
+          state.blocks = numbers.map((num) => {
+            return {
+              id: randomID(),
+              disabled: false,
+              selected: false,
+              source: state.mode,
+              type: getType(num)
+            }
+          })
+        }
       } else if (mode === 'basic maths') {
         state.operator = state.operator === '+' ? '-' : '+'
       }
@@ -140,16 +143,19 @@ export const MainSlice = createSlice({
       const { role, mode } = state
 
       if (role === "board") {
-        if (mode === 'trivia') state.question = Math.floor(Math.random() * 1000) + 1
-        else if (mode === 'basic maths') {
+        if (mode === 'trivia') {
+          state.question = Math.floor(Math.random() * 1000) + 1
+          state.blocks = []
+        } else if (mode === 'basic maths') {
           const num1 = Math.floor(Math.random() * 500) + 1
           const num2 = Math.floor(Math.random() * 500) + 1
           state.question = [Math.max(num1, num2), Math.min(num1, num2)]
+          state.blocks = []
         }
       } else {
         const numbers = randomNumbers()
 
-        state.question = numbers.map((num) => {
+        state.blocks = numbers.map((num) => {
           return {
             id: randomID(),
             disabled: false,

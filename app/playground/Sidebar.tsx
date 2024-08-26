@@ -31,12 +31,12 @@ export const Sidebar: React.FC<SidebarProps> = () => {
     mode === 'trivia' ? (
       role === 'board' ? 
       getWholeSum(blocks) === question as number :
-      triviaAnswer === getWholeSum(question as Block[])
+      triviaAnswer === getWholeSum(blocks)
     ) :
-    mode === 'basic maths' ? (
+    mode === 'basic maths' && question instanceof Array ? (
       operator === '+' ? 
-      sumOne + sumTwo === (question as [number, number])[0] + (question as [number, number])[1] : 
-      sumOne - sumTwo === (question as [number, number])[0] - (question as [number, number])[1]
+      sumOne + sumTwo === question[0] + question[1] : 
+      sumOne - sumTwo === question[0] - question[1]
     ) : false
   )
 
@@ -48,29 +48,29 @@ export const Sidebar: React.FC<SidebarProps> = () => {
         {(mode === 'sandbox') && <h4 className={`text-center text-7xl font-mono ${!display && "text-neutral-700"}`}>{!display ? "???" : getWholeSum(blocks)}</h4>}
         {(mode !== 'sandbox' && role === 'board') && 
         <>
-        {question instanceof Array && mode === 'basic maths' && role === 'board' && typeof question[0] === 'number' && typeof question[1] === 'number' ? 
+        {question instanceof Array && mode === 'basic maths' && role === 'board' && question instanceof Array ? 
         <div className="flex gap-1 items-center justify-center text-5xl font-mono">
           <p className={`${sumOne === question[0] ? "text-green-500" : "text-red-500"}`}>{question[0]}</p>
           <p className={`${correctAnswer ? "text-green-500" : "text-red-500"}`}>{operator}</p>
           <p className={`${sumTwo === question[1] ? "text-green-500" : "text-red-500"}`}>{question[1]}</p>
         </div> :
-        <h4 className={`text-center text-5xl font-mono ${correctAnswer ? "text-green-500" : "text-red-500"}`}>{ question as number}</h4>}
+        <h4 className={`text-center text-5xl font-mono ${correctAnswer ? "text-green-500" : "text-red-500"}`}>{question as number}</h4>}
         </>}
         {(mode !== 'sandbox' && role === 'text') && <Input autoFocus type="number" value={triviaAnswer} onChange={e => setTriviaAnswer(parseInt(e.target.value))} className={`text-center h-fit p-1 text-5xl font-mono ${correctAnswer ? "text-green-500" : "text-red-500"}`} />}
         <Button onClick={() => {dispatch(clearBoard()); setTriviaAnswer(0)}}>Clear</Button>
         {mode === 'sandbox' ? <Button onClick={() => dispatch(randomizeBoard())}>Randomize</Button>:
         <>
           <Button className="flex-1" onClick={() => dispatch(switchRole())}>Switch</Button>
-          <Button className="flex-1" onClick={() => dispatch(nextQuestion())}>Next Question</Button>
+          <Button className="flex-1" onClick={() => {dispatch(nextQuestion()); setTriviaAnswer(0)}}>Next Question</Button>
         </>}
       </div>
 
       <div className="bg-neutral-900 rounded-lg grid grid-cols-2 gap-4 p-4 w-96">
-        <Button disabled={selectedBlocks.length === 0 || selectedBlocks.every(b => b.type === "ONES")} onClick={() => dispatch(splitSelected())}>{`Split Selected`}</Button>
-        <Button disabled={selectedBlocks.length !== 10 || selectedBlocks.some(b => b.type !== selectedBlocks[0].type || b.source !== selectedBlocks[0].source)} 
+        <Button disabled={role === 'text' || selectedBlocks.length === 0 || selectedBlocks.every(b => b.type === "ONES")} onClick={() => dispatch(splitSelected())}>{`Split Selected`}</Button>
+        <Button disabled={role === 'text' || selectedBlocks.length !== 10 || selectedBlocks.some(b => b.type !== selectedBlocks[0].type || b.source !== selectedBlocks[0].source)} 
         onClick={() => dispatch((groupSelected({source: selectedBlocks[0].source, type: getType(getNum(selectedBlocks[0].type)*10)})))}>{`Group Selected`}</Button>
-        <Button disabled={selectedBlocks.length === 0} onClick={() => dispatch(clearSelected())}>{`Unselect All`}</Button>
-        <Button disabled={selectedBlocks.length === 0} onClick={() => dispatch(deleteSelected())}>{`Delete Selected`}</Button>
+        <Button disabled={role === 'text' || selectedBlocks.length === 0} onClick={() => dispatch(clearSelected())}>{`Unselect All`}</Button>
+        <Button disabled={role === 'text' || selectedBlocks.length === 0} onClick={() => dispatch(deleteSelected())}>{`Delete Selected`}</Button>
       </div>
 
       <div className="bg-neutral-900 rounded-lg flex flex-col gap-4 p-4 w-96">
