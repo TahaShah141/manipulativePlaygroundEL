@@ -37,6 +37,9 @@ export const Sidebar: React.FC<SidebarProps> = () => {
       operator === '+' ? 
       sumOne + sumTwo === question[0] + question[1] : 
       sumOne - sumTwo === question[0] - question[1]
+    ) : 
+    mode === 'advanced maths' && question instanceof Array ? (
+      getWholeSum(blocks) === question[0] 
     ) : false
   )
 
@@ -48,11 +51,11 @@ export const Sidebar: React.FC<SidebarProps> = () => {
         {(mode === 'sandbox') && <h4 className={`text-center text-7xl font-mono ${!display && "text-neutral-700"}`}>{!display ? "???" : getWholeSum(blocks)}</h4>}
         {(mode !== 'sandbox' && role === 'board') && 
         <>
-        {question instanceof Array && mode === 'basic maths' && role === 'board' && question instanceof Array ? 
+        {question instanceof Array && role === 'board' ? 
         <div className="flex gap-1 items-center justify-center text-5xl font-mono">
-          <p className={`${sumOne === question[0] ? "text-green-500" : "text-red-500"}`}>{question[0]}</p>
+          <p className={`${sumOne === question[0] || (mode === 'advanced maths' && correctAnswer) ? "text-green-500" : "text-red-500"}`}>{question[0]}</p>
           <p className={`${correctAnswer ? "text-green-500" : "text-red-500"}`}>{operator}</p>
-          <p className={`${sumTwo === question[1] ? "text-green-500" : "text-red-500"}`}>{question[1]}</p>
+          <p className={`${sumTwo === question[1] || mode === 'advanced maths' ? "text-green-500" : "text-red-500"}`}>{question[1]}</p>
         </div> :
         <h4 className={`text-center text-5xl font-mono ${correctAnswer ? "text-green-500" : "text-red-500"}`}>{question as number}</h4>}
         </>}

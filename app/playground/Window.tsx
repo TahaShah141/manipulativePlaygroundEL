@@ -1,18 +1,21 @@
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useDroppable } from "@dnd-kit/core"
-import { BaseTenBlock } from "../components/custom/BaseTenBlock"
 import { MainState } from "@/lib/redux/hooks"
-import { useEffect, useState } from "react"
-import { getNum, groupOnes } from "@/lib/utils"
 import { Block, Blocks } from "@/lib/types"
+import { groupOnes, getNum } from "@/lib/utils"
+import { UniqueIdentifier, useDroppable } from "@dnd-kit/core"
+import React, { useEffect, useState } from "react"
+import { BaseTenBlock } from "../components/custom/BaseTenBlock"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
-type TriviaProps = {
+type WindowProps = {
+  id: UniqueIdentifier
+  blocks: Block[]
+  height?: string
 }
 
-export const Trivia: React.FC<TriviaProps> = () => {
+export const Window: React.FC<WindowProps> = ({id, blocks, height}) => {
   
-  const { blocks, sorting, grouping } = MainState()
-  const { isOver, setNodeRef: dropRef } = useDroppable({ id: 'trivia' })
+  const { isOver, setNodeRef: dropRef } = useDroppable({ id })
+  const { sorting, grouping } = MainState()
 
   const workingBlocks = blocks
   const [displayBlocks, setDisplayBlocks] = useState<Blocks>(workingBlocks)
@@ -22,10 +25,9 @@ export const Trivia: React.FC<TriviaProps> = () => {
     setDisplayBlocks(groupOnes(sorting ? [...workingBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : workingBlocks)) :
     setDisplayBlocks(sorting ? [...workingBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : workingBlocks)
   }, [workingBlocks, sorting, grouping])
-
+  
   return (
-
-    <ScrollArea ref={dropRef} className={`h-[calc(100vh-64px)] rounded-lg p-4 flex-1 ${isOver ? "bg-neutral-700" : "bg-neutral-800"}`}>
+    <ScrollArea ref={dropRef} className={`${height} rounded-lg p-4 flex-1 ${isOver ? "bg-neutral-700" : "bg-neutral-800"}`}>
       <div className={`p-1 flex flex-col`}>
         <div className='gap-2 flex flex-wrap'>
           {displayBlocks.map((block, i) => {
@@ -43,4 +45,4 @@ export const Trivia: React.FC<TriviaProps> = () => {
       </div>
     </ScrollArea>
   )
-} 
+}

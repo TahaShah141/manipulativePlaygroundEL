@@ -68,10 +68,11 @@ export const MainSlice = createSlice({
       const toAdd: Block = {
         id: randomID(),
         type,
-        source,
+        source: state.mode === 'advanced maths' ? 'window' : source,
         selected: false,
-        disabled: false,
+        disabled: state.mode === 'advanced maths',
       }
+      
       state.blocks.push(toAdd)
     },
 
@@ -84,9 +85,9 @@ export const MainSlice = createSlice({
       state.blocks = state.blocks.filter(b => !b.selected).concat([{
         id: randomID(),
         type,
-        source,
+        source: state.mode === 'advanced maths' ? 'window' : source,
         selected: false,
-        disabled: false,
+        disabled: state.mode === 'advanced maths',
       }])
     },
 
@@ -111,6 +112,13 @@ export const MainSlice = createSlice({
         const num2 = Math.floor(Math.random() * 500) + 1
         state.question = [Math.max(num1, num2), Math.min(num1, num2)]
         state.operator = "+"
+      } else if (mode === 'advanced maths') {
+        state.role = 'board'
+        const num1 = Math.floor(Math.random() * 100) + 1
+        const num2 = Math.floor(Math.random() * 9) + 1
+        state.question = [num1, num2]
+        state.blocks = []
+        state.operator = "*"
       }
     },
     
@@ -119,6 +127,7 @@ export const MainSlice = createSlice({
       if (mode === 'trivia') {
         if (role === 'text') {
           state.role = 'board'
+          state.blocks = []
           state.question = Math.floor(Math.random() * 1000) + 1
         } else {
           state.role = "text"
@@ -136,6 +145,10 @@ export const MainSlice = createSlice({
         }
       } else if (mode === 'basic maths') {
         state.operator = state.operator === '+' ? '-' : '+'
+        state.blocks = []
+      } else if (mode === 'advanced maths') {
+        state.operator = state.operator === '*' ? '/' : '*'
+        state.blocks = []
       }
     },
 
@@ -151,6 +164,12 @@ export const MainSlice = createSlice({
           const num2 = Math.floor(Math.random() * 500) + 1
           state.question = [Math.max(num1, num2), Math.min(num1, num2)]
           state.blocks = []
+        } else if (mode === 'advanced maths') {
+          const num1 = Math.floor(Math.random() * 100) + 1
+          const num2 = Math.floor(Math.random() * 9) + 1
+          state.question = [num1, num2]
+          state.blocks = []
+          state.operator = "*"
         }
       } else {
         const numbers = randomNumbers()

@@ -78,7 +78,7 @@ export const splitBlock = (block: Block): Block[] => {
     id: randomID(),
     type: getType(getNum(block.type)/10),
     selected: false,
-    disabled: false,
+    disabled: block.disabled,
     source: block.source
   }))
 }

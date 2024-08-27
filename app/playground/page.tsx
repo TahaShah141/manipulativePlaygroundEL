@@ -8,6 +8,7 @@ import { useDragAndDrop } from '@/lib/hooks/useDragAndDrop';
 import { MainState } from '@/lib/redux/hooks';
 import { Trivia } from './Trivia';
 import { BasicMath } from './BasicMath';
+import { AdvancedMath } from './AdvancedMath';
 
 export default function Playground() {
 
@@ -21,6 +22,7 @@ export default function Playground() {
         {mode === 'sandbox' && <Sandbox />}
         {mode === 'trivia' && <Trivia />}
         {mode === 'basic maths' && <BasicMath />}
+        {mode === 'advanced maths' && <AdvancedMath />}
         <Tray />
       </div>
     </DndContext>
