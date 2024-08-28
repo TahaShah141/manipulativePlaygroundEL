@@ -66,11 +66,11 @@ export const BaseTenBlock: React.FC<BaseTenBlockProps> = ({ block }) => {
     listeners,
     style,
     isDragging,
-    isSmall: source === 'window'
+    isSmall: source === 'window' || source === 'supply'
   }
 
   return (
-    <div onClick={() => dispatch(selectBlock({id}))} className={`h-fit ${selected ? "ring-2 ring-white" : ""}`}>
+    <div onClick={() => dispatch(selectBlock({id}))} className={`h-fit ${selected ? "ring-2 ring-red-500" : ""}`}>
       {type === "ONES" && <OnesBlock {...blockProps} />}
       {type === "TENS" && <TensBlock {...blockProps} />}
       {type === "HUNDREDS" && <HundredsBlock {...blockProps} />}

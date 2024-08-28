@@ -41,24 +41,24 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
 
     operator === '+' ?
       grouping ? 
-      setDisplayBlocks(groupOnes(sorting ? [...blocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : blocks)) :
-      setDisplayBlocks(sorting ? [...blocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : blocks)
+      setDisplayBlocks(groupOnes(sorting ? [...blocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : blocks)) :
+      setDisplayBlocks(sorting ? [...blocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : blocks)
       :
       grouping ? 
-      setDisplayBlocks(groupOnes(sorting ? [...totalBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : totalBlocks)) :
-      setDisplayBlocks(sorting ? [...totalBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : totalBlocks)
+      setDisplayBlocks(groupOnes(sorting ? [...totalBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : totalBlocks)) :
+      setDisplayBlocks(sorting ? [...totalBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : totalBlocks)
   }, [blocks, sorting, grouping, showingAnswer])
 
   useEffect(() => {
     grouping ? 
-    setDisplayBlocksOne(groupOnes(sorting ? [...operandOneBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : operandOneBlocks)) :
-    setDisplayBlocksOne(sorting ? [...operandOneBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : operandOneBlocks)
+    setDisplayBlocksOne(groupOnes(sorting ? [...operandOneBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : operandOneBlocks)) :
+    setDisplayBlocksOne(sorting ? [...operandOneBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : operandOneBlocks)
   }, [blocks, sorting, grouping])
   
   useEffect(() => {
     grouping ? 
-    setDisplayBlocksTwo(groupOnes(sorting ? [...operandTwoBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : operandTwoBlocks)) :
-    setDisplayBlocksTwo(sorting ? [...operandTwoBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : operandTwoBlocks)
+    setDisplayBlocksTwo(groupOnes(sorting ? [...operandTwoBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : operandTwoBlocks)) :
+    setDisplayBlocksTwo(sorting ? [...operandTwoBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : operandTwoBlocks)
   }, [blocks, sorting, grouping])
 
   return (

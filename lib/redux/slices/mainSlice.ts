@@ -1,11 +1,12 @@
 import { Block, BlockTypes } from "@/lib/types";
-import { getType, randomNumbers, splitBlock } from "@/lib/utils";
+import { getBlocks, getType, randomNumbers, splitBlock } from "@/lib/utils";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as randomID } from "uuid"
 
 interface MemoState {
   blocks: Block[]
+  supply: Block[]
   sorting: boolean
   grouping: boolean
   display: boolean
@@ -17,6 +18,7 @@ interface MemoState {
 
 const initialState: MemoState = {
   blocks: [],
+  supply: [],
   sorting: true,
   grouping: true,
   display: true,
@@ -31,6 +33,7 @@ export const MainSlice = createSlice({
       const { id } = action.payload
       if (state.role === 'text') return;
       state.blocks = state.blocks.map(b => b.id !== id ? b : {...b, selected: !b.selected})
+      state.supply = state.supply.map(b => b.id !== id ? b : {...b, selected: !b.selected})
     },
 
     toggleSorting: (state) => {
@@ -73,11 +76,33 @@ export const MainSlice = createSlice({
         disabled: state.mode === 'advanced maths',
       }
       
-      state.blocks.push(toAdd)
+      if (state.mode === 'advanced maths' && state.operator === '/') {
+        const divisor = (state.question as [number, number])[1]
+        
+        if (state.supply.filter(b => b.type === type).length >= divisor) {
+          const newSupply = []
+          let count = 0
+          for (const b of state.supply) {
+            if (b.type === type) {
+              if (count >= divisor) {
+                newSupply.push(b)
+              } else count++
+            } else newSupply.push(b)
+          }
+          state.supply = newSupply
+          state.blocks.push(toAdd)
+        }
+      } else {
+        state.blocks.push(toAdd)
+      }
     },
 
     splitSelected: (state) => {
       state.blocks = state.blocks.map(b => !b.selected || b.type === "ONES" ? ({...b, selected: false}) : splitBlock(b)).flat()
+    },
+
+    splitSelectedSupply: (state) => {
+      state.supply = state.supply.map(b => !b.selected || b.type === "ONES" ? ({...b, selected: false}) : splitBlock(b)).flat()
     },
 
     groupSelected: (state, action: PayloadAction<{type: BlockTypes, source: string}>) => {
@@ -96,7 +121,24 @@ export const MainSlice = createSlice({
     },
 
     deleteSelected: (state) => {
-      state.blocks = state.blocks.filter(b => !b.selected)
+      if (state.mode === 'advanced maths' && state.operator === '/') {
+        const divisor = (state.question as [number, number])[1]
+        const toRemove = state.blocks.filter(b => b.selected)
+        state.blocks = state.blocks.filter(b => !b.selected)
+        for (const b of toRemove) {
+          for (let i = 0; i < divisor; i++) {
+            state.supply.push({
+              id: randomID(),
+              disabled: false,
+              selected: false,
+              source: 'supply',
+              type: b.type
+            })
+          }
+        }
+      } else {
+        state.blocks = state.blocks.filter(b => !b.selected)
+      }
     },
 
     setMode: (state, action: PayloadAction<{mode: string}>) => {
@@ -147,10 +189,23 @@ export const MainSlice = createSlice({
         state.operator = state.operator === '+' ? '-' : '+'
         state.blocks = []
       } else if (mode === 'advanced maths') {
+
+        if (state.operator === '*') {
+          const num1 = (state.question as [number, number])[0]
+          state.supply = getBlocks(num1).map(n => ({
+            id: randomID(),
+            disabled: false,
+            selected: false,
+            type: getType(n),
+            source: 'supply'
+          }))
+        }
+
         state.operator = state.operator === '*' ? '/' : '*'
         state.blocks = []
       }
     },
+
 
     nextQuestion: (state) => {
       const { role, mode } = state
@@ -165,11 +220,20 @@ export const MainSlice = createSlice({
           state.question = [Math.max(num1, num2), Math.min(num1, num2)]
           state.blocks = []
         } else if (mode === 'advanced maths') {
-          const num1 = Math.floor(Math.random() * 100) + 1
+          const num1 = Math.floor(Math.random() * 200) + 1
           const num2 = Math.floor(Math.random() * 9) + 1
           state.question = [num1, num2]
           state.blocks = []
-          state.operator = "*"
+
+          if (state.operator === '/') {
+            state.supply = getBlocks(num1).map(n => ({
+              id: randomID(),
+              disabled: false,
+              selected: false,
+              type: getType(n),
+              source: 'supply'
+            }))
+          }
         }
       } else {
         const numbers = randomNumbers()
@@ -198,6 +262,7 @@ export const {
   toggleDisplay, 
   toggleGrouping,
   splitSelected,
+  splitSelectedSupply,
   groupSelected,
   clearSelected,
   deleteSelected,

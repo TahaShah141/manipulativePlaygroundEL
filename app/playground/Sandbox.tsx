@@ -18,8 +18,8 @@ export const Sandbox: React.FC<SandboxProps> = () => {
 
   useEffect(() => {
     grouping ? 
-    setDisplayBlocks(groupOnes(sorting ? [...blocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : blocks)) :
-    setDisplayBlocks(sorting ? [...blocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : blocks)
+    setDisplayBlocks(groupOnes(sorting ? [...blocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : blocks)) :
+    setDisplayBlocks(sorting ? [...blocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : blocks)
   }, [blocks, sorting, grouping])
 
   return (

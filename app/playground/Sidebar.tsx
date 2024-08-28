@@ -18,7 +18,7 @@ const modes = [
 
 export const Sidebar: React.FC<SidebarProps> = () => {
 
-  const { display, blocks, sorting, grouping, mode, role, question, operator } = MainState()
+  const { display, blocks, sorting, grouping, mode, role, question, operator, supply } = MainState()
   const dispatch = useAppDispatch()
 
   const [triviaAnswer, setTriviaAnswer] = useState(0)
@@ -39,7 +39,9 @@ export const Sidebar: React.FC<SidebarProps> = () => {
       sumOne - sumTwo === question[0] - question[1]
     ) : 
     mode === 'advanced maths' && question instanceof Array ? (
-      getWholeSum(blocks) === question[0] 
+      operator === '*' ?
+      getWholeSum(blocks) === question[0] :
+      getWholeSum(supply) === question[0] % question[1]
     ) : false
   )
 

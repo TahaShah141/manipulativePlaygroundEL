@@ -10,8 +10,6 @@ export const AdvancedMath = () => {
 
   const { windowsPerRow } = layouts[windowCount - 1]
 
-  console.log(windowsPerRow)
-
   return (
     <div className="flex-1 h-full flex flex-col gap-2">
       {windowsPerRow.map((row, j)=> (

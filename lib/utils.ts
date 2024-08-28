@@ -34,7 +34,7 @@ export const groupOnes = (blocks: Block[], bound: number = 10): Blocks => {
   }
   if (count !== 0) result.push(toAdd)
   
-  return result.concat(blocks.filter(n => n.type !== "ONES"))
+  return blocks.filter(n => n.type !== "ONES").concat(result)
 }
 
 export const randomNumbers = (): number[] => {
@@ -83,7 +83,7 @@ export const splitBlock = (block: Block): Block[] => {
   }))
 }
 
-export const getBlocks = (n: number) => {
+export const getBlocks = (n: number): number[] => {
   const num = n <= 0 ? -n : n
   const newBlocks = []
   const digits = num.toString().padStart(4, '0').split("")

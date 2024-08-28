@@ -9,10 +9,11 @@ import { MainState } from '@/lib/redux/hooks';
 import { Trivia } from './Trivia';
 import { BasicMath } from './BasicMath';
 import { AdvancedMath } from './AdvancedMath';
+import { Supply } from './Supply';
 
 export default function Playground() {
 
-  const { mode } = MainState()
+  const { mode, operator } = MainState()
   const { sensors, handleDragEnd } = useDragAndDrop()
     
   return (
@@ -23,7 +24,8 @@ export default function Playground() {
         {mode === 'trivia' && <Trivia />}
         {mode === 'basic maths' && <BasicMath />}
         {mode === 'advanced maths' && <AdvancedMath />}
-        <Tray />
+        {!(mode === 'advanced maths' && operator === '/') && <Tray />}
+        {mode === 'advanced maths' && operator === '/' && <Supply />}
       </div>
     </DndContext>
   );

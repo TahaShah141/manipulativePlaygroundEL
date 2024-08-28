@@ -19,8 +19,8 @@ export const Trivia: React.FC<TriviaProps> = () => {
 
   useEffect(() => {
     grouping ? 
-    setDisplayBlocks(groupOnes(sorting ? [...workingBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : workingBlocks)) :
-    setDisplayBlocks(sorting ? [...workingBlocks].sort((a, b) => getNum(a.type) - getNum(b.type)) : workingBlocks)
+    setDisplayBlocks(groupOnes(sorting ? [...workingBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : workingBlocks)) :
+    setDisplayBlocks(sorting ? [...workingBlocks].sort((a, b) => getNum(b.type) - getNum(a.type)) : workingBlocks)
   }, [workingBlocks, sorting, grouping])
 
   return (
