@@ -1,10 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDroppable } from "@dnd-kit/core"
-import { BaseTenBlock } from "../../../components/custom/BaseTenBlock"
+import { BaseTenBlock } from "./BaseTenBlock"
 import { BaseTenState } from "@/lib/redux/hooks"
 import { useEffect, useState } from "react"
 import { getNum, groupOnes } from "@/lib/utils"
-import { Block, Blocks } from "@/lib/types"
+import { Blocks } from "@/lib/types"
 
 type TriviaProps = {
 }

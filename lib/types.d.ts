@@ -10,3 +10,11 @@ export type Block = {
 }
 
 export type Blocks = (Block | Block[])[]
+
+export type Fraction = {
+  id: UniqueIdentifier
+  type: number
+  selected: boolean
+  disabled: boolean
+  source: string
+}

@@ -6,7 +6,7 @@ import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
 import { Blocks } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Edit, MinusIcon, PlusIcon } from "lucide-react"
-import { BaseTenBlock } from "@/components/custom/BaseTenBlock"
+import { BaseTenBlock } from "./BaseTenBlock"
 
 type BasicMathProps = {
 }

@@ -4,7 +4,7 @@ import { Blocks } from "@/lib/types"
 import { groupOnes, getNum } from "@/lib/utils"
 import { ChevronUp } from "lucide-react"
 import { useState, useEffect } from "react"
-import { BaseTenBlock } from "@/components/custom/BaseTenBlock"
+import { BaseTenBlock } from "./BaseTenBlock"
 import { Button } from "@/components/ui/button"
 import { splitSelectedSupply } from "@/lib/redux/slices/BaseTenSlice"
 

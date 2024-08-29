@@ -11,7 +11,7 @@ import { Tray } from './Tray';
 import { Trivia } from './Trivia';
 import { Sidebar } from './Sidebar';
 
-export default function Playground() {
+export default function BaseTen() {
 
   const { mode, operator } = BaseTenState()
   const { sensors, handleDragEnd } = useBaseTenDragAndDrop()

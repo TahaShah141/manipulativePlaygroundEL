@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronUp } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { BaseTenBlock } from '@/components/custom/BaseTenBlock'
+import { BaseTenBlock } from './BaseTenBlock'
 
 type TrayProps = {
 }

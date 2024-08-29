@@ -3,7 +3,7 @@ import { Block, Blocks } from "@/lib/types"
 import { groupOnes, getNum } from "@/lib/utils"
 import { UniqueIdentifier, useDroppable } from "@dnd-kit/core"
 import React, { useEffect, useState } from "react"
-import { BaseTenBlock } from "@/components/custom/BaseTenBlock"
+import { BaseTenBlock } from "./BaseTenBlock"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 type WindowProps = {
