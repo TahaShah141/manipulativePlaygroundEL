@@ -1,11 +1,11 @@
 import { DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { useDispatch } from "react-redux"
-import { newBlock } from "../redux/slices/mainSlice"
-import { MainState } from "../redux/hooks"
+import { newBlock } from "../redux/slices/BaseTenSlice"
+import { BaseTenState } from "../redux/hooks"
 
 export const useDragAndDrop = () => {
 
-  const { mode, question, role } = MainState()
+  const { mode, question, role } = BaseTenState()
   const dispatch = useDispatch()
 
   const sensors = useSensors(

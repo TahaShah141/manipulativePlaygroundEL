@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDroppable } from "@dnd-kit/core"
-import { BaseTenBlock } from "../components/custom/BaseTenBlock"
-import { MainState } from "@/lib/redux/hooks"
+import { BaseTenBlock } from "../../../components/custom/BaseTenBlock"
+import { BaseTenState } from "@/lib/redux/hooks"
 import { useEffect, useState } from "react"
 import { getNum, groupOnes } from "@/lib/utils"
 import { Block, Blocks } from "@/lib/types"
@@ -11,7 +11,7 @@ type TriviaProps = {
 
 export const Trivia: React.FC<TriviaProps> = () => {
   
-  const { blocks, sorting, grouping } = MainState()
+  const { blocks, sorting, grouping } = BaseTenState()
   const { isOver, setNodeRef: dropRef } = useDroppable({ id: 'trivia' })
 
   const workingBlocks = blocks

@@ -4,7 +4,7 @@ import { UniqueIdentifier } from "@dnd-kit/core";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as randomID } from "uuid"
 
-interface MemoState {
+interface BaseTenState {
   blocks: Block[]
   supply: Block[]
   sorting: boolean
@@ -16,7 +16,7 @@ interface MemoState {
   operator?: "+" | "-" | "*" | "/"
 }
 
-const initialState: MemoState = {
+const initialState: BaseTenState = {
   blocks: [],
   supply: [],
   sorting: true,
@@ -25,8 +25,8 @@ const initialState: MemoState = {
   mode: 'sandbox'
 }
 
-export const MainSlice = createSlice({
-  name: "main",
+export const BaseTenSlice = createSlice({
+  name: "baseTen",
   initialState,
   reducers: {
     selectBlock: (state, action: PayloadAction<{id: UniqueIdentifier}>) => {
@@ -269,6 +269,6 @@ export const {
   setMode,
   switchRole,
   nextQuestion
-} = MainSlice.actions
+} = BaseTenSlice.actions
 
-export default MainSlice.reducer
+export default BaseTenSlice.reducer

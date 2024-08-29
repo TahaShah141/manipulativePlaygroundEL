@@ -1,10 +1,10 @@
-import { MainState } from "@/lib/redux/hooks"
+import { BaseTenState } from "@/lib/redux/hooks"
 import { Window } from "./Window"
 import { Heights, layouts } from "@/lib/layouts"
 
 export const AdvancedMath = () => {
 
-  const { blocks, operator, question: Q } = MainState()
+  const { blocks, question: Q } = BaseTenState()
   const question = Q as [number, number]
   const windowCount = question[1]
 
@@ -19,9 +19,6 @@ export const AdvancedMath = () => {
           ))}
         </div>
       ))}
-      {/* {Array.from({length: windowCount}, (_, i) => (
-        <Window id={`window-${i}`} blocks={blocks} />
-      ))} */}
     </div>
   )
 }

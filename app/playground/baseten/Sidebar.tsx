@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { MainState, useAppDispatch } from "@/lib/redux/hooks"
-import { clearBoard, clearSelected, deleteSelected, groupSelected, nextQuestion, randomizeBoard, setMode, splitSelected, switchRole, toggleDisplay, toggleGrouping, toggleSorting } from "@/lib/redux/slices/mainSlice"
-import { Block } from "@/lib/types"
+import { BaseTenState, useAppDispatch } from "@/lib/redux/hooks"
+import { clearBoard, clearSelected, deleteSelected, groupSelected, nextQuestion, randomizeBoard, setMode, splitSelected, switchRole, toggleDisplay, toggleGrouping, toggleSorting } from "@/lib/redux/slices/BaseTenSlice"
 import { getNum, getType, getWholeSum } from "@/lib/utils"
 import { useState } from "react"
 
@@ -18,7 +17,7 @@ const modes = [
 
 export const Sidebar: React.FC<SidebarProps> = () => {
 
-  const { display, blocks, sorting, grouping, mode, role, question, operator, supply } = MainState()
+  const { display, blocks, sorting, grouping, mode, role, question, operator, supply } = BaseTenState()
   const dispatch = useAppDispatch()
 
   const [triviaAnswer, setTriviaAnswer] = useState(0)

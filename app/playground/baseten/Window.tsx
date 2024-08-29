@@ -1,9 +1,9 @@
-import { MainState } from "@/lib/redux/hooks"
+import { BaseTenState } from "@/lib/redux/hooks"
 import { Block, Blocks } from "@/lib/types"
 import { groupOnes, getNum } from "@/lib/utils"
 import { UniqueIdentifier, useDroppable } from "@dnd-kit/core"
 import React, { useEffect, useState } from "react"
-import { BaseTenBlock } from "../components/custom/BaseTenBlock"
+import { BaseTenBlock } from "@/components/custom/BaseTenBlock"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 type WindowProps = {
@@ -15,7 +15,7 @@ type WindowProps = {
 export const Window: React.FC<WindowProps> = ({id, blocks, height}) => {
   
   const { isOver, setNodeRef: dropRef } = useDroppable({ id })
-  const { sorting, grouping } = MainState()
+  const { sorting, grouping } = BaseTenState()
 
   const workingBlocks = blocks
   const [displayBlocks, setDisplayBlocks] = useState<Blocks>(workingBlocks)

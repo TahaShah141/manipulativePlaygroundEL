@@ -1,16 +1,16 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { MainState, useAppDispatch } from "@/lib/redux/hooks"
+import { BaseTenState, useAppDispatch } from "@/lib/redux/hooks"
 import { Blocks } from "@/lib/types"
 import { groupOnes, getNum } from "@/lib/utils"
 import { ChevronUp } from "lucide-react"
 import { useState, useEffect } from "react"
-import { BaseTenBlock } from "../components/custom/BaseTenBlock"
+import { BaseTenBlock } from "@/components/custom/BaseTenBlock"
 import { Button } from "@/components/ui/button"
-import { splitSelectedSupply } from "@/lib/redux/slices/mainSlice"
+import { splitSelectedSupply } from "@/lib/redux/slices/BaseTenSlice"
 
 export const Supply = () => {
 
-  const { supply, grouping, sorting } = MainState()
+  const { supply, grouping, sorting } = BaseTenState()
   const [open, setOpen] = useState(false)
 
   const [displayBlocks, setDisplayBlocks] = useState<Blocks>(supply)

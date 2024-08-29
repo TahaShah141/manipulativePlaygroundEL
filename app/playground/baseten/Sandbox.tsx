@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDroppable } from "@dnd-kit/core"
-import { BaseTenBlock } from "../components/custom/BaseTenBlock"
-import { MainState } from "@/lib/redux/hooks"
+import { BaseTenBlock } from "@/components/custom/BaseTenBlock"
+import { BaseTenState } from "@/lib/redux/hooks"
 import { useEffect, useState } from "react"
 import { getNum, groupOnes } from "@/lib/utils"
 import { Blocks } from "@/lib/types"
@@ -11,7 +11,7 @@ type SandboxProps = {
 
 export const Sandbox: React.FC<SandboxProps> = () => {
   
-  const { blocks, sorting, grouping } = MainState()
+  const { blocks, sorting, grouping } = BaseTenState()
   const { isOver, setNodeRef: dropRef } = useDroppable({ id: 'sandbox' })
 
   const [displayBlocks, setDisplayBlocks] = useState<Blocks>(blocks)

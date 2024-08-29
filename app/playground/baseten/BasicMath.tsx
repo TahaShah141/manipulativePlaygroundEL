@@ -1,19 +1,19 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useDroppable } from "@dnd-kit/core"
-import { BaseTenBlock } from "../components/custom/BaseTenBlock"
-import { MainState } from "@/lib/redux/hooks"
+import { BaseTenState } from "@/lib/redux/hooks"
 import { useEffect, useState } from "react"
 import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
 import { Blocks } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Edit, MinusIcon, PlusIcon } from "lucide-react"
+import { BaseTenBlock } from "@/components/custom/BaseTenBlock"
 
 type BasicMathProps = {
 }
 
 export const BasicMath: React.FC<BasicMathProps> = () => {
   
-  const { blocks, sorting, grouping, operator } = MainState()
+  const { blocks, sorting, grouping, operator } = BaseTenState()
   
   const operandOneBlocks = blocks.filter(b => b.source === 'operandOne')
   const operandTwoBlocks = blocks.filter(b => b.source === 'operandTwo')

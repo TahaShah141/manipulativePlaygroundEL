@@ -3,7 +3,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import storage from "redux-persist/lib/storage"
 import { persistReducer, persistStore } from 'redux-persist'
-import mainReducer from '@/lib/redux/slices/mainSlice'
+import baseTenReducer from '@/lib/redux/slices/BaseTenSlice'
 
 const persistConfig = {
   key: 'root',
@@ -11,7 +11,7 @@ const persistConfig = {
 }
 
 const reducer = combineReducers({
-  main: mainReducer
+  baseTen: baseTenReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)
@@ -29,4 +29,4 @@ export type AppStore = typeof store
 export type RootState = ReturnType<AppStore['getState']>
 export type AppDispatch = AppStore['dispatch']
 
-export const selectMainState = (state: RootState) => state.main
+export const selectBaseTenState = (state: RootState) => state.baseTen

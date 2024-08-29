@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/lib/redux/hooks"
-import { selectBlock } from "@/lib/redux/slices/mainSlice"
+import { selectBlock } from "@/lib/redux/slices/BaseTenSlice"
 import { Block } from "@/lib/types"
-import { DraggableAttributes, UniqueIdentifier, useDraggable } from "@dnd-kit/core"
+import { DraggableAttributes, useDraggable } from "@dnd-kit/core"
 import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities"
 import React, { CSSProperties, forwardRef } from "react"
 
