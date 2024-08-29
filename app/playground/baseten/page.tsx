@@ -1,7 +1,7 @@
 "use client"
 
 import { DndContext, pointerWithin } from '@dnd-kit/core';
-import { useDragAndDrop } from '@/lib/hooks/useDragAndDrop';
+import { useBaseTenDragAndDrop } from '@/lib/hooks/useBaseTenDragAndDrop';
 import { BaseTenState } from '@/lib/redux/hooks';
 import { AdvancedMath } from './AdvancedMath';
 import { BasicMath } from './BasicMath';
@@ -14,7 +14,7 @@ import { Sidebar } from './Sidebar';
 export default function Playground() {
 
   const { mode, operator } = BaseTenState()
-  const { sensors, handleDragEnd } = useDragAndDrop()
+  const { sensors, handleDragEnd } = useBaseTenDragAndDrop()
     
   return (
     <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>

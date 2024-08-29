@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux"
 import { newBlock } from "../redux/slices/BaseTenSlice"
 import { BaseTenState } from "../redux/hooks"
 
-export const useDragAndDrop = () => {
+export const useBaseTenDragAndDrop = () => {
 
   const { mode, question, role } = BaseTenState()
   const dispatch = useDispatch()
