@@ -2,7 +2,7 @@ import { Block, BlockTypes } from "@/lib/types";
 import { getBlocks, getType, randomNumbers, splitBlock } from "@/lib/utils";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { v4 as randomID } from "uuid"
+import { v4 as randomID } from "uuid";
 
 interface BaseTenState {
   blocks: Block[]
@@ -73,7 +73,7 @@ export const BaseTenSlice = createSlice({
         type,
         source: state.mode === 'advanced maths' ? 'window' : source,
         selected: false,
-        disabled: state.mode === 'advanced maths',
+        disabled: state.mode === 'advanced maths' || state.mode === 'basic maths',
       }
       
       if (state.mode === 'advanced maths' && state.operator === '/') {

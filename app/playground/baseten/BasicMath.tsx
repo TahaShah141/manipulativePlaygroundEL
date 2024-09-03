@@ -1,11 +1,11 @@
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useDroppable } from "@dnd-kit/core"
-import { BaseTenState } from "@/lib/redux/hooks"
-import { useEffect, useState } from "react"
-import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
-import { Blocks } from "@/lib/types"
 import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { BaseTenState } from "@/lib/redux/hooks"
+import { Blocks } from "@/lib/types"
+import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
+import { useDroppable } from "@dnd-kit/core"
 import { Edit, MinusIcon, PlusIcon } from "lucide-react"
+import { useEffect, useState } from "react"
 import { BaseTenBlock } from "./BaseTenBlock"
 
 type BasicMathProps = {
