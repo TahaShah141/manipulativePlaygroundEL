@@ -3,7 +3,7 @@ import { useDroppable } from "@dnd-kit/core"
 import { BaseTenState } from "@/lib/redux/hooks"
 import { useEffect, useState } from "react"
 import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
-import { Blocks } from "@/lib/types"
+import { Block, Blocks } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Edit, MinusIcon, PlusIcon } from "lucide-react"
 import { BaseTenBlock } from "./BaseTenBlock"
@@ -31,7 +31,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
     getWholeSum(operandOneBlocks) + getWholeSum(operandTwoBlocks) :
     getWholeSum(operandOneBlocks) - getWholeSum(operandTwoBlocks) 
 
-    const totalBlocks = getBlocks(total).map((n, i) => ({
+    const totalBlocks: Block[] = getBlocks(total).map((n, i) => ({
       id: `displayBlock-${i}`,
       type: getType(n),
       selected: false,

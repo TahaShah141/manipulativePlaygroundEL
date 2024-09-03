@@ -73,7 +73,7 @@ export const BaseTenSlice = createSlice({
         type,
         source: state.mode === 'advanced maths' ? 'window' : source,
         selected: false,
-        disabled: state.mode === 'advanced maths',
+        disabled: state.mode === 'advanced maths' || state.mode === 'basic maths',
       }
       
       if (state.mode === 'advanced maths' && state.operator === '/') {
