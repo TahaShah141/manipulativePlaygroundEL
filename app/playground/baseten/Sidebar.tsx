@@ -70,10 +70,10 @@ export const Sidebar: React.FC<SidebarProps> = () => {
       </div>
 
       <div className="bg-neutral-900 rounded-lg grid grid-cols-2 gap-4 p-4 w-96">
-        <Button disabled={role === 'text' || selectedBlocks.length === 0 || selectedBlocks.every(b => b.type === "ONES")} onClick={() => dispatch(splitSelected())}>{`Split Selected`}</Button>
-        <Button disabled={role === 'text' || selectedBlocks.length !== 10 || selectedBlocks.some(b => b.type !== selectedBlocks[0].type || b.source !== selectedBlocks[0].source)} 
+        <Button disabled={selectedBlocks.length === 0 || selectedBlocks.every(b => b.type === "ONES")} onClick={() => dispatch(splitSelected())}>{`Split Selected`}</Button>
+        <Button disabled={selectedBlocks.length !== 10 || selectedBlocks.some(b => b.type !== selectedBlocks[0].type || b.source !== selectedBlocks[0].source)} 
         onClick={() => dispatch((groupSelected({source: selectedBlocks[0].source, type: getType(getNum(selectedBlocks[0].type)*10)})))}>{`Group Selected`}</Button>
-        <Button disabled={role === 'text' || selectedBlocks.length === 0} onClick={() => dispatch(clearSelected())}>{`Unselect All`}</Button>
+        <Button disabled={selectedBlocks.length === 0} onClick={() => dispatch(clearSelected())}>{`Unselect All`}</Button>
         <Button disabled={role === 'text' || selectedBlocks.length === 0} onClick={() => dispatch(deleteSelected())}>{`Delete Selected`}</Button>
       </div>
 
