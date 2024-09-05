@@ -2,7 +2,7 @@ import { DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/cor
 import { Fraction } from "../types"
 import { v4 as randomID } from "uuid"
 import { useAppDispatch } from "../redux/hooks"
-import { insertIntoRow } from "../redux/slices/FractionSlice"
+import { insertIntoRow, moveIntoRow } from "../redux/slices/FractionSlice"
 
 export const useFractionsDragAndDrop = () => {
 
@@ -25,13 +25,16 @@ export const useFractionsDragAndDrop = () => {
     const { source, type } = active.data.current
     const fraction: Fraction = {
       id: randomID(),
-      source,
+      source: over.id.toString(),
       type,
       selected: false,
       disabled: false,
     }
-
-    dispatch(insertIntoRow({fraction, index}))
+    if (source === 'tray') {
+      dispatch(insertIntoRow({fraction, index}))
+    } else if (source !== over.id.toString()) {
+      dispatch(moveIntoRow({index, fraction: {...fraction, id: active.id}}))
+    }
   }
 
   return { sensors, handleDragEnd }

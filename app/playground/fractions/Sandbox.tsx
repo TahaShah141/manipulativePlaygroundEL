@@ -1,10 +1,7 @@
 import { useDroppable } from "@dnd-kit/core"
 import { FractionBlock } from "./FractionBlock"
 import { Fraction } from "@/lib/types"
-import { FractionState, useAppDispatch } from "@/lib/redux/hooks"
-import { Button } from "@/components/ui/button"
-import { addRow } from "@/lib/redux/slices/FractionSlice"
-
+import { FractionState } from "@/lib/redux/hooks"
 type SandboxProps = {
 }
 
@@ -22,7 +19,7 @@ const DropRow: React.FC<DropRowProps> = ({index, row}) => {
   })
 
   return (
-    <div ref={dropRef} className={`${isOver ? 'bg-neutral-700' : 'bg-neutral-800'} min-h-12 p-2 rounded-sm flex-1 flex overflow-x-visible max-w-[calc(100vw-64px)]`}>
+    <div ref={dropRef} className={`${isOver ? 'bg-neutral-900' : ''} border h-12 flex overflow-x-visible`}>
       {row.map((f, i) => <FractionBlock fraction={f} />)}
     </div>
   )
@@ -30,13 +27,13 @@ const DropRow: React.FC<DropRowProps> = ({index, row}) => {
 
 export const Sandbox: React.FC<SandboxProps> = ({}) => {
 
-  const { rows } = FractionState()
-  const dispatch = useAppDispatch()
+  const { rows, scale } = FractionState()
 
   return (
-    <div className="flex-1 h-full flex flex-col gap-2">
-      {rows.map((row, i) => <DropRow key={i} index={i} row={row} />)}
-      <Button onClick={() => dispatch(addRow())}>Add Row</Button>
+    <div className="h-full flex flex-col gap-2 border border-white" style={{flex: `${scale} 1 0%`}}>
+      <div className="flex flex-col">
+        {rows.map((row, i) => <DropRow key={i} index={i} row={row} />)}
+      </div>
     </div>
   )
 }

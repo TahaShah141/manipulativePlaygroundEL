@@ -31,7 +31,6 @@ export const BaseTenSlice = createSlice({
   reducers: {
     selectBlock: (state, action: PayloadAction<{id: UniqueIdentifier}>) => {
       const { id } = action.payload
-      if (state.role === 'text') return;
       state.blocks = state.blocks.map(b => b.id !== id ? b : {...b, selected: !b.selected})
       state.supply = state.supply.map(b => b.id !== id ? b : {...b, selected: !b.selected})
     },
@@ -121,6 +120,7 @@ export const BaseTenSlice = createSlice({
     },
 
     deleteSelected: (state) => {
+      if (state.role === 'text') return;
       if (state.mode === 'advanced maths' && state.operator === '/') {
         const divisor = (state.question as [number, number])[1]
         const toRemove = state.blocks.filter(b => b.selected)
