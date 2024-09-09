@@ -2,7 +2,7 @@ import { useDroppable } from "@dnd-kit/core"
 import { FractionBlock } from "./FractionBlock"
 import { Fraction } from "@/lib/types"
 import { FractionState } from "@/lib/redux/hooks"
-import { useState } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 type SandboxProps = {
 }
@@ -22,7 +22,7 @@ const DropRow: React.FC<DropRowProps> = ({index, row}) => {
 
   return (
     <div ref={dropRef} className={`${isOver ? 'bg-neutral-900' : ''} min-h-12 flex overflow-x-visible`}>
-      {row.map((f, i) => <FractionBlock fraction={f} />)}
+      {row.map((f, i) => <FractionBlock fraction={f} key={`key-${i}`} />)}
     </div>
   )
 }
@@ -95,13 +95,13 @@ export const Sandbox: React.FC<SandboxProps> = ({}) => {
     <div className="h-full flex flex-col gap-2 border bg-stone-900" style={{flex: `${scale} 1 0%`}}>
       <div className="flex relative flex-col">
         {gridLines.map(g => 
-          <>{g.value <= scale && <div className={`absolute top-0 bottom-0 w-0 ${g.displayed ? 'border-r border-neutral-500 border-dashed': "border-0"} z-20`} style={{left: `${g.value*(100/scale)}%`}}>
+          <React.Fragment key={g.value}>{g.value <= scale && <div className={`absolute top-0 bottom-0 w-0 ${g.displayed ? 'border-r border-neutral-500 border-dashed': "border-0"} z-20`} style={{left: `${g.value*(100/scale)}%`}}>
             <div className="relative">
               <Button onClick={() => setGridLines(gridLines.map(gl => ({...gl, displayed: gl.name === g.name ? !gl.displayed : gl.displayed})))} variant={'ghost'} className="absolute top-0 -translate-y-full -translate-x-1/2 text-[8px] size-5 p-1">{g.name}</Button>
             </div>
-          </div>}</>
+          </div>}</React.Fragment>
         )}
-        {rows.map((row, i) => <DropRow key={i} index={i} row={row} />)}
+        {rows.map((row, i) => <DropRow key={`dropRow-${i}`} index={i} row={row} />)}
       </div>
     </div>
   )

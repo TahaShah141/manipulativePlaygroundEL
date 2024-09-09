@@ -5,12 +5,14 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 interface FractionState {
   rows: Fraction[][]
   scale: number
+  fullTray: boolean
   labels: boolean
 }
 
 const initialState: FractionState = {
   rows: Array.from({length: 12}, () => []),
   scale: 1,
+  fullTray: true,
   labels: true
 }
 
@@ -46,6 +48,10 @@ export const FractionSlice = createSlice({
       state.rows = state.rows.map(r => r.filter(f => f.id !== fraction.id))
     },
 
+    toggleFullTray: (state) => {
+      state.fullTray = !state.fullTray
+    },
+
     toggleScale: (state) => {
       if (state.scale === 2) {
         const newRows: Fraction[][] = []
@@ -73,7 +79,8 @@ export const {
   insertIntoRow,
   moveIntoRow,
   deleteFraction,
-  toggleScale
+  toggleScale,
+  toggleFullTray
 } = FractionSlice.actions
 
 export default FractionSlice.reducer

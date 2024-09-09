@@ -7,13 +7,13 @@ import { useState } from 'react';
 import { Sandbox } from './Sandbox';
 import { Button } from '@/components/ui/button';
 import { FractionState, useAppDispatch } from '@/lib/redux/hooks';
-import { clearRows, toggleLabels, toggleScale } from '@/lib/redux/slices/FractionSlice';
+import { clearRows, toggleFullTray, toggleLabels, toggleScale } from '@/lib/redux/slices/FractionSlice';
 
 export default function Fractions() {
 
   const { sensors, handleDragEnd } = useFractionsDragAndDrop()
   const dispatch = useAppDispatch()
-  const { labels, scale } = FractionState()
+  const { labels, scale, fullTray } = FractionState()
 
   return (
     <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>
@@ -28,6 +28,7 @@ export default function Fractions() {
             <Button className='w-72' onClick={() => dispatch(clearRows())}>Clear All</Button>
             <Button className='w-72' onClick={() => dispatch(toggleLabels())}>{`${labels ? "Hide" : "Show"} Labels`}</Button>
             <Button className='w-72' onClick={() => dispatch(toggleScale())}>{scale === 1 ? "Set Large" : "Set Small"}</Button>
+            <Button className='w-72' onClick={() => dispatch(toggleFullTray())}>{fullTray ? "Show Less" : "Show Full"}</Button>
           </div>
         </div>
       </div>

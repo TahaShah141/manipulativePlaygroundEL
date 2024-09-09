@@ -1,3 +1,4 @@
+import { FractionState } from "@/lib/redux/hooks"
 import { FractionBlock } from "./FractionBlock"
 
 export const fractionColors = [
@@ -8,11 +9,14 @@ export const fractionColors = [
 ]
 
 export const Tray = () => {
+
+  const { fullTray } = FractionState()
+
   return (
     <div className="flex-1 flex flex-col z-10">
       {Array.from({ length: 12 }, (_, row) =>
-        <div className='bg-neutral-800 flex overflow-x-visible'>
-          {Array.from({ length: row+1 }, (_, i) => (
+        <div className={`bg-neutral-8 flex overflow-x-visible`}>
+          {Array.from({ length: fullTray ? row+1 : 1 }, (_, i) => (
             <FractionBlock fraction={{
               id: `${row}-${i}`,
               type: row+1,
