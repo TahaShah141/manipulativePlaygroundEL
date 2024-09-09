@@ -49,6 +49,15 @@ export const BaseTenSlice = createSlice({
 
     clearBoard: (state) => {
       if (state.role !== 'text') state.blocks = []
+      if (state.operator === '/') {
+        state.supply = getBlocks((state.question as [number, number])[0]).map(n => ({
+          id: randomID(),
+          disabled: false,
+          selected: false,
+          type: getType(n),
+          source: 'supply'
+        }))
+      } 
     },
 
     randomizeBoard: (state) => {
