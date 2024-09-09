@@ -35,7 +35,7 @@ export const Sandbox: React.FC<SandboxProps> = () => {
                 </div>
               )
             } else {
-              return <BaseTenBlock block={block} />
+              return <BaseTenBlock key={`block-${i}`} block={block} />
             }
           })}
         </div>

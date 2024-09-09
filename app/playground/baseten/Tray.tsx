@@ -26,7 +26,7 @@ export const Tray: React.FC<TrayProps> = () => {
           <ChevronUp className={`size-7 transition-transform duration-300 delay-200 ${open && "rotate-180"}`} />
         </div>
         <div className="flex flex-col">
-          {Array.from({length: 10}, (_, i) => <BaseTenBlock block={{...defaultBlockOptions, id: `ONES-${i}`, type: "ONES"}} />)}
+          {Array.from({length: 10}, (_, i) => <BaseTenBlock key={`block-${i}`} block={{...defaultBlockOptions, id: `ONES-${i}`, type: "ONES"}} />)}
         </div>
         <BaseTenBlock block={{...defaultBlockOptions, id: `TENS`, type: "TENS"}} />
         <BaseTenBlock block={{...defaultBlockOptions, id: `HUNDREDS`, type: "HUNDREDS"}} />

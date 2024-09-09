@@ -45,7 +45,7 @@ export const Supply = () => {
                     </div>
                   )
                 } else {
-                  return <BaseTenBlock block={block} />
+                  return <BaseTenBlock key={`block-${i}`} block={block} />
                 }
               })}
             </div>

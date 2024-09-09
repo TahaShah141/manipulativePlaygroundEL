@@ -38,7 +38,7 @@ export const Window: React.FC<WindowProps> = ({id, blocks, height}) => {
                 </div>
               )
             } else {
-              return <BaseTenBlock block={block} />
+              return <BaseTenBlock key={`block-${i}`} block={block} />
             }
           })}
         </div>
