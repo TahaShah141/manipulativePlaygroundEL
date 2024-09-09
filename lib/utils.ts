@@ -34,7 +34,7 @@ export const groupOnes = (blocks: Block[], bound: number = 10): Blocks => {
   }
   if (count !== 0) result.push(toAdd)
   
-  return blocks.filter(n => n.type !== "ONES").concat(result)
+  return (blocks.filter(n => n.type !== "ONES") as Blocks).concat(result)
 }
 
 export const randomNumbers = (): number[] => {
