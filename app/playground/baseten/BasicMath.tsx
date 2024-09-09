@@ -78,7 +78,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
                 </div>
               )
             } else {
-              return <BaseTenBlock block={block} />
+              return <BaseTenBlock key={`block-${i}`} block={block} />
             }
           })}
         </div>
@@ -97,7 +97,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
                   </div>
                 )
               } else {
-                return <BaseTenBlock block={block} />
+                return <BaseTenBlock key={`block-${i}`} block={block} />
               }
             })}
           </div>
@@ -114,7 +114,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
                   </div>
                 )
               } else {
-                return <BaseTenBlock block={block} />
+                return <BaseTenBlock key={`block-${i}`} block={block} />
               }
             })}
           </div>
