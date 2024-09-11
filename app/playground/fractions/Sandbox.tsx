@@ -1,9 +1,10 @@
 import { useDroppable } from "@dnd-kit/core"
-import { FractionBlock } from "./FractionBlock"
+import { FractionBlock, TestBlock } from "./FractionBlock"
 import { Fraction } from "@/lib/types"
 import { FractionState } from "@/lib/redux/hooks"
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable"
 type SandboxProps = {
 }
 
@@ -21,9 +22,11 @@ const DropRow: React.FC<DropRowProps> = ({index, row}) => {
   })
 
   return (
-    <div ref={dropRef} className={`${isOver ? 'bg-neutral-900' : ''} min-h-12 flex overflow-x-visible`}>
-      {row.map((f, i) => <FractionBlock fraction={f} key={`key-${i}`} />)}
-    </div>
+    <SortableContext items={row} strategy={horizontalListSortingStrategy}>
+      <div ref={dropRef} className={`${isOver ? 'bg-neutral-900' : ''} min-h-12 flex overflow-x-visible`}>
+        {row.map((f, i) => <FractionBlock fraction={f} key={`key-${i}`} />)}
+      </div>
+    </SortableContext>
   )
 }
 

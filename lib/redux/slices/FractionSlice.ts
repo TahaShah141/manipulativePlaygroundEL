@@ -1,5 +1,6 @@
 import { Fraction } from "@/lib/types";
 import { UniqueIdentifier } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface FractionState {
@@ -43,6 +44,15 @@ export const FractionSlice = createSlice({
       state.rows = state.rows.map((r, i) => i === index ? [...r, fraction] : r.filter(b => b.id !== fraction.id))
     },
 
+    moveInsideRow: (state, action: PayloadAction<{rowIndex: number, activeId: UniqueIdentifier, overId: UniqueIdentifier}>) => {
+      const { rowIndex, activeId, overId } = action.payload
+      const currRow = state.rows[rowIndex]
+      const activeIndex = currRow.findIndex(f => f.id === activeId)
+      const overIndex = currRow.findIndex(f => f.id === overId)
+
+      state.rows[rowIndex] = arrayMove(currRow, activeIndex, overIndex)
+    },
+
     deleteFraction: (state, action: PayloadAction<{fraction: Fraction}>) => {
       const {fraction} = action.payload
       state.rows = state.rows.map(r => r.filter(f => f.id !== fraction.id))
@@ -78,6 +88,7 @@ export const {
   toggleLabels,
   insertIntoRow,
   moveIntoRow,
+  moveInsideRow,
   deleteFraction,
   toggleScale,
   toggleFullTray
