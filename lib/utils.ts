@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Block, Blocks, BlockTypes } from "./types";
+import { Block, Blocks, BlockTypes, Fraction } from "./types";
 import { v4 as randomID } from "uuid"
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,6 +13,28 @@ export const shuffleArray = <T>(array: T[]): T[] => {
       [array[i], array[j]] = [array[j], array[i]]; // Swap elements
   }
   return array;
+}
+
+export const newRandomFraction = (upper: number, N: number = 12): number => {
+  const harmonicNumbers = Array.from({length: N}, (_, i) => 1/(i + 1)) 
+  
+  while (true) {
+    const toChoose = Math.floor(Math.random()*12) + 1
+    let sum = 0
+    for (let i = 0; i < toChoose; i++) {
+      sum += chooseRandom(harmonicNumbers)
+    }
+    if (sum <= upper) return sum
+  }
+}
+
+export const chooseRandom = <T>(array: T[]): T => {
+  return array[Math.floor(Math.random() * array.length)]
+}
+
+export const rowSum = (row: Fraction[]): number => {
+  const sum = row.reduce((sum, f) => sum + 1/f.type, 0)
+  return sum
 }
 
 export const groupOnes = (blocks: Block[], bound: number = 10): Blocks => {

@@ -7,6 +7,7 @@ import { XIcon } from "lucide-react"
 import { deleteFraction } from "@/lib/redux/slices/FractionSlice"
 import { useSortable } from "@dnd-kit/sortable"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { FractionValue } from "./FractionValue"
 
 type FractionBlockProps = {
   fraction: Fraction
@@ -60,8 +61,6 @@ export const FractionBlock: React.FC<FractionBlockProps> = ({fraction}) => {
     transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0px)`
   }
 
-  const decimal = (1/type).toFixed(5)
-
   return (
     <HoverCard>
       <div ref={dragRef} {...attributes} {...listeners} style={style} className={`relative group text-black flex-shrink-0 flex justify-center items-center border-black border ${fractionColors[(type-1)%4]} h-12 text-sm font-mono`}>
@@ -69,9 +68,7 @@ export const FractionBlock: React.FC<FractionBlockProps> = ({fraction}) => {
         <HoverCardTrigger>{labels && (type === 1 ? "1" : `1/${type}`)}</HoverCardTrigger>
       </div>
       <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 ${fractionColors[(type-1)%4]} text-black`}>
-        <p>{+decimal}</p>
-        <p>or</p>
-        <p>{`${+(+((decimal))*100).toFixed(5)}%`}</p>
+        <FractionValue n={(1/type)} />
       </HoverCardContent>
     </HoverCard>
   )

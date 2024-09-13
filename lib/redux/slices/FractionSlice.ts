@@ -1,4 +1,5 @@
 import { Fraction } from "@/lib/types";
+import { newRandomFraction, rowSum } from "@/lib/utils";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
@@ -8,10 +9,12 @@ interface FractionState {
   scale: number
   fullTray: boolean
   labels: boolean
+  questions: number[]
 }
 
 const initialState: FractionState = {
   rows: Array.from({length: 12}, () => []),
+  questions: Array.from({length: 12}, () => -1),
   scale: 1,
   fullTray: true,
   labels: true
@@ -21,6 +24,11 @@ export const FractionSlice = createSlice({
   name: "fraction",
   initialState,
   reducers: {
+    nextQuestions: (state) => {
+      state.rows = state.rows.map(r => [])
+      state.questions = Array.from({length: 12}, () => newRandomFraction(state.scale))
+    },
+
     clearRows: (state) => {
       state.rows = state.rows.map(r => [])
     },
@@ -31,16 +39,16 @@ export const FractionSlice = createSlice({
 
     insertIntoRow: (state, action: PayloadAction<{index: number, fraction: Fraction}>) => {
       const { fraction, index } = action.payload
-      const rowSum = state.rows[index].reduce((sum, f) => sum + 1/f.type, 0)
-      if ((rowSum + 1/fraction.type > state.scale)) return;
+      const sum = rowSum(state.rows[index])
+      if ((sum + 1/fraction.type > state.scale)) return;
       state.rows[index].push(fraction)
     },
     
     moveIntoRow: (state, action: PayloadAction<{index: number, fraction: Fraction}>) => {
       const { index, fraction } = action.payload
       
-      const rowSum = state.rows[index].reduce((sum, f) => sum + 1/f.type, 0)
-      if ((rowSum + 1/fraction.type > state.scale)) return;
+      const sum = rowSum(state.rows[index])
+      if ((sum + 1/fraction.type > state.scale)) return;
       state.rows = state.rows.map((r, i) => i === index ? [...r, fraction] : r.filter(b => b.id !== fraction.id))
     },
 
@@ -79,6 +87,7 @@ export const FractionSlice = createSlice({
         state.rows = newRows
       }
       state.scale = state.scale === 1 ? 2 : 1
+      state.questions = Array.from({length: 12}, () => newRandomFraction(state.scale))
     }
   }
 })
@@ -91,7 +100,8 @@ export const {
   moveInsideRow,
   deleteFraction,
   toggleScale,
-  toggleFullTray
+  toggleFullTray,
+  nextQuestions
 } = FractionSlice.actions
 
 export default FractionSlice.reducer
