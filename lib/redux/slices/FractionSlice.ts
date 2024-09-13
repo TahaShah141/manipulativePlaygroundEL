@@ -1,5 +1,5 @@
 import { Fraction, NumberFraction } from "@/lib/types";
-import { newRandomFraction, rowSum } from "@/lib/utils";
+import { generateNewQuestions, newRandomFraction, rowSum } from "@/lib/utils";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
@@ -39,7 +39,7 @@ export const FractionSlice = createSlice({
       if (mode === 'sandbox') {
         state.questions = state.questions.map(q => [])
       } else if (mode === 'fill the gaps') {
-        state.questions = state.questions.map(q => newRandomFraction(state.scale))
+        state.questions = generateNewQuestions(state.scale, state.questions.length)
       } else if (mode === 'comparisons') {
         return ;
       }
@@ -47,7 +47,7 @@ export const FractionSlice = createSlice({
 
     nextQuestions: (state) => {
       state.rows = state.rows.map(r => [])
-      state.questions = Array.from({length: 12}, () => newRandomFraction(state.scale))
+      state.questions = generateNewQuestions(state.scale, state.questions.length)
     },
 
     clearRows: (state) => {
@@ -108,7 +108,7 @@ export const FractionSlice = createSlice({
         state.rows = newRows
       }
       state.scale = state.scale === 1 ? 2 : 1
-      state.questions = Array.from({length: 12}, () => newRandomFraction(state.scale))
+      state.questions = generateNewQuestions(state.scale, state.questions.length)
     }
   }
 })

@@ -30,6 +30,13 @@ export const newRandomFraction = (upper: number, N: number = 12): NumberFraction
   }
 }
 
+export const generateNewQuestions = (upper: number, n: number = 12, sorting: boolean=true): NumberFraction[][] => {
+  if (sorting)
+    return Array.from({length: n}, () => newRandomFraction(upper)).sort((a, b) => - getFractionArraySum(a) + getFractionArraySum(b))
+  else
+    return Array.from({length: n}, () => newRandomFraction(upper))
+}
+
 export const chooseRandom = <T>(array: T[]): T => {
   return array[Math.floor(Math.random() * array.length)]
 }
