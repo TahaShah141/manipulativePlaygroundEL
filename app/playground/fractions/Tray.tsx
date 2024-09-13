@@ -8,6 +8,7 @@ export const fractionColors = [
   'bg-yellow-400',
 ]
 
+export const baseColor = 'bg-neutral-200'
 export const Tray = () => {
 
   const { fullTray } = FractionState()

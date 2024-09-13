@@ -1,7 +1,8 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Block, Blocks, BlockTypes, Fraction } from "./types";
+import { Block, Blocks, BlockTypes, Fraction, NumberFraction } from "./types";
 import { v4 as randomID } from "uuid"
+import { getFractionArraySum } from "./fractions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -15,16 +16,17 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   return array;
 }
 
-export const newRandomFraction = (upper: number, N: number = 12): number => {
-  const harmonicNumbers = Array.from({length: N}, (_, i) => 1/(i + 1)) 
+export const newRandomFraction = (upper: number, N: number = 12): NumberFraction[] => {
+  const harmonicNumbers: NumberFraction[] = Array.from({length: N}, (_, i) => ({numerator: 1, denominator: i+1})) 
   
   while (true) {
     const toChoose = Math.floor(Math.random()*12) + 1
-    let sum = 0
+    let sum: NumberFraction[] = []
     for (let i = 0; i < toChoose; i++) {
-      sum += chooseRandom(harmonicNumbers)
+      const chosen = chooseRandom(harmonicNumbers)
+      sum.push(chosen)
     }
-    if (sum <= upper) return sum
+    if (getFractionArraySum(sum) <= upper) return sum
   }
 }
 

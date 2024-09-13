@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { FractionState, useAppDispatch } from "@/lib/redux/hooks"
-import { clearRows, nextQuestions, toggleFullTray, toggleLabels, toggleScale } from "@/lib/redux/slices/FractionSlice"
+import { changeMode, clearRows, nextQuestions, toggleColors, toggleFullTray, toggleLabels, toggleScale } from "@/lib/redux/slices/FractionSlice"
 
 type SidebarProps = {
 
@@ -14,7 +14,7 @@ const modes = [
 
 export const Sidebar: React.FC<SidebarProps> = ({}) => {
 
-  const { labels, scale, fullTray } = FractionState()
+  const { labels, colors, scale, fullTray, mode: currentMode } = FractionState()
   const dispatch = useAppDispatch()
 
   return (
@@ -23,18 +23,18 @@ export const Sidebar: React.FC<SidebarProps> = ({}) => {
         <h1 className="text-3xl text-center">Fraction Board</h1>
       </div>
 
-      <div className="flex flex-col p-2 px-4 bg-neutral-900 rounded-md gap-2">
-        <p className="text-2xl text-center">Controls</p>
-        <Button variant={"default"} className='' onClick={() => dispatch(clearRows())}>Clear All</Button>
-        <Button variant={"default"} className='' onClick={() => dispatch(nextQuestions())}>New Questions</Button>
-        <Button variant={"default"} className='' onClick={() => dispatch(toggleLabels())}>{`${labels ? "Hide" : "Show"} Labels`}</Button>
-        <Button variant={"default"} className='' onClick={() => dispatch(toggleScale())}>{scale === 1 ? "Set Large" : "Set Small"}</Button>
-        <Button variant={"default"} className='' onClick={() => dispatch(toggleFullTray())}>{fullTray ? "Show Less" : "Show Full"}</Button>
+      <div className="flex flex-col p-4 bg-neutral-900 rounded-md gap-2">
+        <Button variant={"secondary"} className='' onClick={() => dispatch(clearRows())}>Clear All</Button>
+        <Button variant={"secondary"} className='' onClick={() => dispatch(toggleColors())}>{`${colors ? "Hide" : "Show"} Colors`}</Button>
+        <Button variant={"secondary"} className='' onClick={() => dispatch(toggleLabels())}>{`${labels ? "Hide" : "Show"} Labels`}</Button>
+        <Button variant={"secondary"} className='' onClick={() => dispatch(toggleFullTray())}>{fullTray ? "Show Each Block" : "Show Full Tray"}</Button>
+        <Button variant={"secondary"} className='' onClick={() => dispatch(toggleScale())}>{scale === 1 ? "Set Large" : "Set Small"}</Button>
+        {currentMode !== 'sandbox' && <Button variant={"secondary"} className='' onClick={() => dispatch(nextQuestions())}>New Questions</Button>}
       </div>
 
       <div className="flex flex-col gap-2">
         <p className="text-2xl text-center">Modes</p>
-        {modes.map(m => <Button variant={"outline"} className="capitalize">{m}</Button>)}
+        {modes.map(mode => <Button key={mode} variant={mode === currentMode ? "default" : "outline"} onClick={() => dispatch(changeMode({mode}))} className="capitalize">{mode}</Button>)}
       </div>
     </div>
   )

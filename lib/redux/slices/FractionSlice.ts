@@ -1,4 +1,4 @@
-import { Fraction } from "@/lib/types";
+import { Fraction, NumberFraction } from "@/lib/types";
 import { newRandomFraction, rowSum } from "@/lib/utils";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -9,21 +9,42 @@ interface FractionState {
   scale: number
   fullTray: boolean
   labels: boolean
-  questions: number[]
+  questions: NumberFraction[][]
+  mode: string
+  colors: boolean
 }
 
 const initialState: FractionState = {
   rows: Array.from({length: 12}, () => []),
-  questions: Array.from({length: 12}, () => -1),
+  questions: Array.from({length: 12}, () => []),
   scale: 1,
   fullTray: true,
-  labels: true
+  labels: true,
+  mode:'sandbox',
+  colors: true
 }
 
 export const FractionSlice = createSlice({
   name: "fraction",
   initialState,
   reducers: {
+    toggleColors: (state) => {
+      state.colors = !state.colors
+    },
+    changeMode: (state, action: PayloadAction<{mode: string}>) => {
+      const { mode } = action.payload
+      state.mode = mode
+
+      state.rows = state.rows.map(r => [])
+      if (mode === 'sandbox') {
+        state.questions = state.questions.map(q => [])
+      } else if (mode === 'fill the gaps') {
+        state.questions = state.questions.map(q => newRandomFraction(state.scale))
+      } else if (mode === 'comparisons') {
+        return ;
+      }
+    },
+
     nextQuestions: (state) => {
       state.rows = state.rows.map(r => [])
       state.questions = Array.from({length: 12}, () => newRandomFraction(state.scale))
@@ -100,8 +121,10 @@ export const {
   moveInsideRow,
   deleteFraction,
   toggleScale,
+  toggleColors,
   toggleFullTray,
-  nextQuestions
+  nextQuestions,
+  changeMode,
 } = FractionSlice.actions
 
 export default FractionSlice.reducer

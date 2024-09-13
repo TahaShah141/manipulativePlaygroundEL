@@ -1,6 +1,6 @@
 import { useDroppable } from "@dnd-kit/core"
 import { FractionBlock, TestBlock } from "./FractionBlock"
-import { Fraction } from "@/lib/types"
+import { Fraction, NumberFraction } from "@/lib/types"
 import { FractionState } from "@/lib/redux/hooks"
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -8,17 +8,18 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { FractionValue } from "./FractionValue"
 import { rowSum } from "@/lib/utils"
 import { CheckIcon, XIcon } from "lucide-react"
+import { composeFraction, getFractionArraySum, getFractionString } from "@/lib/fractions"
 type SandboxProps = {
 }
 
 type DropRowProps = {
   index: number
   row: Fraction[]
-  question: number
+  question: NumberFraction[]
 }
 
 const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
-  const { scale } = FractionState()
+  const { scale, mode } = FractionState()
   const { isOver, setNodeRef: dropRef } = useDroppable({ 
     id: `row-${index}`, 
     data: {
@@ -27,21 +28,24 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
   })
 
   const sum = rowSum(row)
+  const questionSum = getFractionArraySum(question)
+
+  const questionFraction = composeFraction(question)
 
   return (
     <HoverCard>
       <HoverCardTrigger ref={dropRef} className={`${isOver ? 'bg-neutral-950' : 'bg-neutral-900'} relative min-h-12 flex overflow-x-visible`}>
-        {question !== -1 &&
+        {mode === 'fill the gaps' &&
         <>
-        <div className={`absolute -right-2 translate-x-full rounded-md top-1/2 -translate-y-1/2 flex justify-center items-center size-8 border-2 ${sum === question ? 'bg-green-500 border-green-400' : 'bg-red-500 border-red-600'}`}>
-          {sum === question ? <CheckIcon /> : <XIcon />}
+        <div className={`absolute -right-2 translate-x-full rounded-md top-1/2 -translate-y-1/2 flex justify-center items-center size-8 border-2 ${sum === questionSum ? 'bg-green-500 border-green-400' : 'bg-red-500 border-red-600'}`}>
+          {sum === questionSum ? <CheckIcon /> : <XIcon />}
         </div>
         <HoverCard>
-          <HoverCardTrigger className={`absolute left-0 top-0 bottom-0 flex justify-center items-center bg-neutral-800 border-r border-white text-white`} style={{width: `${question*(100/scale)}%`}}>
-            {/* {(question*100).toFixed(5)} */}
+          <HoverCardTrigger className={`absolute left-0 top-0 bottom-0 flex justify-center items-center bg-neutral-800 border-r border-white text-white`} style={{width: `${questionSum*(100/scale)}%`}}>
+            {getFractionString(questionFraction)}
           </HoverCardTrigger>
           <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
-            <FractionValue n={question} />
+            <FractionValue n={questionSum} />
           </HoverCardContent>
         </HoverCard> 
         </>}

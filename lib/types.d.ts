@@ -18,3 +18,8 @@ export type Fraction = {
   disabled: boolean
   source: string
 }
+
+export type NumberFraction = {
+  numerator: number
+  denominator: number
+}
