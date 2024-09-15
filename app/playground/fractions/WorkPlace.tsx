@@ -6,7 +6,7 @@ import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { FractionValue } from "./FractionValue"
-import { rowSum } from "@/lib/utils"
+import { isSameNumber, rowSum } from "@/lib/utils"
 import { ArrowBigDown, ArrowBigUp, CheckIcon, Equal, XIcon } from "lucide-react"
 import { composeFraction, getFractionArraySum, getFractionString } from "@/lib/fractions"
 import { ChosenChoices, setChosenOperator } from "@/lib/redux/slices/FractionSlice"
@@ -34,13 +34,15 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
 
   const questionFraction = composeFraction(question)
 
+  const isCorrect = isSameNumber(sum, questionSum)
+
   return (
     <HoverCard>
       <HoverCardTrigger ref={dropRef} className={`${isOver ? 'bg-neutral-950' : 'bg-neutral-900'} relative min-h-12 flex overflow-x-visible`}>
         {mode !== 'sandbox' &&
         <>
-        <div className={`absolute -right-2 translate-x-full rounded-md top-1/2 -translate-y-1/2 flex justify-center items-center size-8 border-2 ${sum === questionSum ? 'bg-green-500 border-green-400' : 'bg-red-500 border-red-600'}`}>
-          {sum === questionSum ? <CheckIcon /> : <XIcon />}
+        <div className={`absolute -right-2 translate-x-full rounded-md top-1/2 -translate-y-1/2 flex justify-center items-center size-8 border-2 ${isCorrect ? 'bg-green-500 border-green-400' : 'bg-red-500 border-red-600'}`}>
+          {isCorrect ? <CheckIcon /> : <XIcon />}
         </div>
         <HoverCard>
           {mode !== 'comparisons' && 
@@ -68,7 +70,7 @@ export const WorkPlace: React.FC<WorkPlaceProps> = ({}) => {
   const [gridLines, setGridLines] = useState(defaultGridLines)
 
   const questionValues = questions.map(q => getFractionString(composeFraction(q)))
-  const allCorrect = questions.every((q, i) => rowSum(rows[i]) === getFractionArraySum(q))
+  const allCorrect = questions.every((q, i) => isSameNumber(rowSum(rows[i]), getFractionArraySum(q)))
 
   return (
     <div className="flex flex-col gap-2 h-full" style={{flex: `${scale} 1 0%`}}>

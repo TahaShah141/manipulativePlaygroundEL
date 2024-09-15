@@ -4,13 +4,16 @@ import { Block, Blocks, BlockTypes, Fraction, NumberFraction } from "./types";
 import { v4 as randomID } from "uuid"
 import { getFractionArraySum } from "./fractions";
 
+export const EPSILON = 0.0001
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+
 export const shuffleArray = <T>(array: T[]): T[] => {
   for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]]; // Swap elements
   }
   return array;
@@ -34,11 +37,15 @@ export const generateNewQuestions = (upper: number, n: number = 12, sorting: boo
   if (sorting)
     return Array.from({length: n}, () => newRandomFraction(upper)).sort((a, b) => - getFractionArraySum(a) + getFractionArraySum(b))
   else
-    return Array.from({length: n}, () => newRandomFraction(upper))
+  return Array.from({length: n}, () => newRandomFraction(upper))
 }
 
 export const chooseRandom = <T>(array: T[]): T => {
   return array[Math.floor(Math.random() * array.length)]
+}
+
+export const isSameNumber = (a: number, b: number): boolean => {
+  return Math.abs(a-b) < EPSILON
 }
 
 export const rowSum = (row: Fraction[]): number => {
