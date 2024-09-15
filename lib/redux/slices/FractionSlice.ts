@@ -51,14 +51,14 @@ export const FractionSlice = createSlice({
         state.questions = generateNewQuestions(state.scale, 12)
       } else if (mode === 'comparisons') {
         state.rows = Array.from({length: 2}, () => [])
-        state.questions = generateNewQuestions(state.scale, 2)
+        state.questions = generateNewQuestions(state.scale, 2, false)
       }
     },
 
     nextQuestions: (state) => {
       state.rows = state.rows.map(r => [])
       state.chosen = undefined
-      state.questions = generateNewQuestions(state.scale, state.questions.length)
+      state.questions = generateNewQuestions(state.scale, state.questions.length, state.mode !== 'comparisons')
     },
 
     clearRows: (state) => {
