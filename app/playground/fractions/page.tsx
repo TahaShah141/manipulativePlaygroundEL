@@ -3,15 +3,12 @@
 import { useFractionsDragAndDrop } from '@/lib/hooks/useFractionsDragAndDrop';
 import { DndContext, pointerWithin } from '@dnd-kit/core';
 import { Tray } from './Tray';
-import { Sandbox } from './Sandbox';
-import { FractionState, useAppDispatch } from '@/lib/redux/hooks';
+import { WorkPlace } from './WorkPlace';
 import { Sidebar } from './Sidebar';
 
 export default function Fractions() {
 
   const { sensors, handleDragEnd } = useFractionsDragAndDrop()
-  const dispatch = useAppDispatch()
-  const { labels, scale, fullTray } = FractionState()
 
   return (
     <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>
@@ -20,7 +17,7 @@ export default function Fractions() {
           <Sidebar />
           <div className="flex items-start gap-4 flex-1">
             <Tray />
-            <Sandbox />        
+            <WorkPlace />        
           </div>
         </div>
       </div>

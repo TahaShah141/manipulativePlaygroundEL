@@ -4,6 +4,8 @@ import { UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+export type ChosenChoices = '=' | '>' | '<'
+
 interface FractionState {
   rows: Fraction[][]
   scale: number
@@ -12,6 +14,7 @@ interface FractionState {
   questions: NumberFraction[][]
   mode: string
   colors: boolean
+  chosen?: ChosenChoices
 }
 
 const initialState: FractionState = {
@@ -21,7 +24,7 @@ const initialState: FractionState = {
   fullTray: true,
   labels: true,
   mode:'sandbox',
-  colors: true
+  colors: true,
 }
 
 export const FractionSlice = createSlice({
@@ -31,22 +34,30 @@ export const FractionSlice = createSlice({
     toggleColors: (state) => {
       state.colors = !state.colors
     },
+
+    setChosenOperator: (state, action: PayloadAction<{chosen: ChosenChoices}>) => {
+      state.chosen = action.payload.chosen
+    },
+
     changeMode: (state, action: PayloadAction<{mode: string}>) => {
       const { mode } = action.payload
       state.mode = mode
 
-      state.rows = state.rows.map(r => [])
+      state.rows = Array.from({length: 12}, () => [])
+      state.chosen = undefined
       if (mode === 'sandbox') {
-        state.questions = state.questions.map(q => [])
+        state.questions = Array.from({length: 12}, () => [])
       } else if (mode === 'fill the gaps') {
-        state.questions = generateNewQuestions(state.scale, state.questions.length)
+        state.questions = generateNewQuestions(state.scale, 12)
       } else if (mode === 'comparisons') {
-        return ;
+        state.rows = Array.from({length: 2}, () => [])
+        state.questions = generateNewQuestions(state.scale, 2)
       }
     },
 
     nextQuestions: (state) => {
       state.rows = state.rows.map(r => [])
+      state.chosen = undefined
       state.questions = generateNewQuestions(state.scale, state.questions.length)
     },
 
@@ -125,6 +136,7 @@ export const {
   toggleFullTray,
   nextQuestions,
   changeMode,
+  setChosenOperator,
 } = FractionSlice.actions
 
 export default FractionSlice.reducer

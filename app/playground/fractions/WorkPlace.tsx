@@ -1,15 +1,17 @@
 import { useDroppable } from "@dnd-kit/core"
-import { FractionBlock, TestBlock } from "./FractionBlock"
+import { FractionBlock } from "./FractionBlock"
 import { Fraction, NumberFraction } from "@/lib/types"
-import { FractionState } from "@/lib/redux/hooks"
+import { FractionState, useAppDispatch } from "@/lib/redux/hooks"
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { FractionValue } from "./FractionValue"
 import { rowSum } from "@/lib/utils"
-import { CheckIcon, XIcon } from "lucide-react"
+import { ArrowBigDown, ArrowBigUp, CheckIcon, Equal, XIcon } from "lucide-react"
 import { composeFraction, getFractionArraySum, getFractionString } from "@/lib/fractions"
-type SandboxProps = {
+import { ChosenChoices, setChosenOperator } from "@/lib/redux/slices/FractionSlice"
+
+type WorkPlaceProps = {
 }
 
 type DropRowProps = {
@@ -35,15 +37,16 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
   return (
     <HoverCard>
       <HoverCardTrigger ref={dropRef} className={`${isOver ? 'bg-neutral-950' : 'bg-neutral-900'} relative min-h-12 flex overflow-x-visible`}>
-        {mode === 'fill the gaps' &&
+        {mode !== 'sandbox' &&
         <>
         <div className={`absolute -right-2 translate-x-full rounded-md top-1/2 -translate-y-1/2 flex justify-center items-center size-8 border-2 ${sum === questionSum ? 'bg-green-500 border-green-400' : 'bg-red-500 border-red-600'}`}>
           {sum === questionSum ? <CheckIcon /> : <XIcon />}
         </div>
         <HoverCard>
+          {mode !== 'comparisons' && 
           <HoverCardTrigger className={`absolute left-0 top-0 bottom-0 flex justify-center items-center bg-neutral-800 border-r border-white text-white`} style={{width: `${questionSum*(100/scale)}%`}}>
             {getFractionString(questionFraction)}
-          </HoverCardTrigger>
+          </HoverCardTrigger>}
           <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
             <FractionValue n={questionSum} />
           </HoverCardContent>
@@ -58,14 +61,18 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
   )
 }
 
-export const Sandbox: React.FC<SandboxProps> = ({}) => {
+export const WorkPlace: React.FC<WorkPlaceProps> = ({}) => {
 
-  const { rows, questions, scale } = FractionState()
+  const { rows, questions, scale, mode, chosen } = FractionState()
+  const dispatch = useAppDispatch()
   const [gridLines, setGridLines] = useState(defaultGridLines)
 
+  const questionValues = questions.map(q => getFractionString(composeFraction(q)))
+  const allCorrect = questions.every((q, i) => rowSum(rows[i]) === getFractionArraySum(q))
+
   return (
-    <div className="flex flex-col gap-2 border bg-stone-900" style={{flex: `${scale} 1 0%`}}>
-      <div className="flex relative flex-col">
+    <div className="flex flex-col gap-2 h-full" style={{flex: `${scale} 1 0%`}}>
+      <div className={`flex relative flex-col ${mode === 'comparisons' ? "h-full justify-between" : ""}`}>
         {gridLines.map(g => 
           <React.Fragment key={g.value}>{g.value <= scale && <div className={`absolute top-0 bottom-0 w-0 ${g.displayed ? 'border-r border-neutral-500 border-dashed': "border-0"} z-20`} style={{left: `${g.value*(100/scale)}%`}}>
             <div className="relative">
@@ -73,7 +80,33 @@ export const Sandbox: React.FC<SandboxProps> = ({}) => {
             </div>
           </div>}</React.Fragment>
         )}
-        {rows.map((row, i) => <DropRow key={`dropRow-${i}`} index={i} row={row} question={questions[i]} />)}
+        {mode === 'comparisons' && 
+        <>
+        <DropRow key={`dropRow-${0}`} index={0} row={rows[0]} question={questions[0]} />
+        <div className="w-full flex gap-8 p-4">
+          <div className="relative flex-1 flex justify-center items-center bg-neutral-900 rounded-2xl text-white text-4xl">
+            {questionValues[0]}
+            <div className="absolute size-16 bg-neutral-900 rounded-md flex justify-center items-center -top-4 -translate-y-full left-1/2 -translate-x-1/2">
+              <ArrowBigUp />
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 text-2xl font-bold font-mono">
+            {['>', '=', '<'].map(c => 
+              <Button key={c} disabled={!allCorrect} onClick={() => dispatch(setChosenOperator({chosen: c as ChosenChoices}))} className="size-16 text-2xl font-bold font-mono" variant={c === chosen ? "default" : "outline"} size='icon'>
+                {c}
+              </Button>
+            )}
+          </div>
+          <div className="relative flex-1 flex justify-center items-center bg-neutral-900 rounded-2xl text-white text-4xl">
+            {questionValues[1]}
+            <div className="absolute size-16 bg-neutral-900 rounded-md flex justify-center items-center -bottom-4 translate-y-full left-1/2 -translate-x-1/2">
+              <ArrowBigDown />
+            </div>
+          </div>
+        </div>
+        <DropRow key={`dropRow-${1}`} index={1} row={rows[1]} question={questions[1]} />
+        </>}
+        {mode !== 'comparisons' && rows.map((row, i) => <DropRow key={`dropRow-${i}`} index={i} row={row} question={questions[i]} />)}
       </div>
     </div>
   )

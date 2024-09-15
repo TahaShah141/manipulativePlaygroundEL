@@ -1,14 +1,6 @@
 import { FractionState } from "@/lib/redux/hooks"
 import { FractionBlock } from "./FractionBlock"
 
-export const fractionColors = [
-  'bg-red-500',
-  'bg-blue-400', 
-  'bg-green-500',
-  'bg-yellow-400',
-]
-
-export const baseColor = 'bg-neutral-200'
 export const Tray = () => {
 
   const { fullTray } = FractionState()
