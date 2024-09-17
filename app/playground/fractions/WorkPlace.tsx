@@ -52,11 +52,14 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
           <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
             <FractionValue n={questionSum} />
           </HoverCardContent>
+          <HoverCardContent side="right" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
+            {`${question.length} Block${question.length !== 1 ? 's' : ''}`}
+          </HoverCardContent>
         </HoverCard> 
         </>}
         {row.map((f, i) => <FractionBlock fraction={f} key={`key-${i}`} />)}
       </HoverCardTrigger>
-      <HoverCardContent side="left" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-800 text-white`}>
+      <HoverCardContent side="left" className={`flex gap-2 justify-between w-fit text-sm p-1 text-white ${mode === 'sandbox' ? "bg-neutral-800" : isCorrect ? "bg-green-500" : "bg-red-500"}`}>
           <FractionValue n={sum} />
       </HoverCardContent>
     </HoverCard>

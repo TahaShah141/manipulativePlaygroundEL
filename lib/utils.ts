@@ -23,7 +23,9 @@ export const newRandomFraction = (upper: number, N: number = 12): NumberFraction
   const harmonicNumbers: NumberFraction[] = Array.from({length: N}, (_, i) => ({numerator: 1, denominator: i+1})) 
   
   while (true) {
-    const toChoose = Math.floor(Math.random()*12) + 1
+    // const toChoose = Math.floor(Math.random()*12) + 1
+    // const toChoose = getRandomTriangularInt(N)
+    const toChoose = getRandomExponentialInt(N)
     let sum: NumberFraction[] = []
     for (let i = 0; i < toChoose; i++) {
       const chosen = chooseRandom(harmonicNumbers)
@@ -31,6 +33,38 @@ export const newRandomFraction = (upper: number, N: number = 12): NumberFraction
     }
     if (getFractionArraySum(sum) <= upper) return sum
   }
+}
+
+export const getRandomTriangularInt = (N: number): number => {
+  let probabilities = Array.from({ length: N }, (_, i) => N - i);
+  const totalSum = probabilities.reduce((sum, p) => sum + p, 0);
+  probabilities = probabilities.map(p => p / totalSum);
+  const randomValue = Math.random();
+  
+  let cumulativeProbability = 0;
+  for (let i = 0; i < N; i++) {
+      cumulativeProbability += probabilities[i];
+      if (randomValue < cumulativeProbability) {
+          return i + 1;
+      }
+  }
+  
+  return N;
+}
+
+export const getRandomExponentialInt = (N: number): number => {
+  let probabilities = Array.from({ length: N }, (_, i) => Math.exp(-i / 4));
+  const totalSum = probabilities.reduce((sum, p) => sum + p, 0);
+  probabilities = probabilities.map(p => p / totalSum);
+  const randomValue = Math.random();
+  let cumulativeProbability = 0;
+  for (let i = 0; i < N; i++) {
+      cumulativeProbability += probabilities[i];
+      if (randomValue < cumulativeProbability) {
+          return i + 1;
+      }
+  }
+  return N;
 }
 
 export const generateNewQuestions = (upper: number, n: number = 12, sorting: boolean=true): NumberFraction[][] => {

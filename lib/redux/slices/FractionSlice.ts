@@ -1,5 +1,5 @@
 import { Fraction, NumberFraction } from "@/lib/types";
-import { generateNewQuestions, newRandomFraction, rowSum } from "@/lib/utils";
+import { generateNewQuestions, rowSum } from "@/lib/utils";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
