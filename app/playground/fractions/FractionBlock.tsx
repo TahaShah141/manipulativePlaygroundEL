@@ -46,7 +46,7 @@ export const FractionBlock: React.FC<FractionBlockProps> = ({fraction}) => {
         <HoverCardTrigger>{labels && (type === 1 ? "1" : `1/${type}`)}</HoverCardTrigger>
       </div>
       <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 ${colors ? fractionColors[(type-1)%4] : baseColor} text-black`}>
-        <FractionValue n={(1/type)} />
+        <FractionValue fractionArray={[{numerator: 1, denominator: type}]} />
       </HoverCardContent>
     </HoverCard>
   )

@@ -8,7 +8,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { FractionValue } from "./FractionValue"
 import { isSameNumber, rowSum } from "@/lib/utils"
 import { ArrowBigDown, ArrowBigUp, CheckIcon, Equal, XIcon } from "lucide-react"
-import { composeFraction, getFractionArraySum, getFractionString } from "@/lib/fractions"
+import { composeFraction, getFractionArraySum, getFractionString, toFractionArray } from "@/lib/fractions"
 import { ChosenChoices, setChosenOperator } from "@/lib/redux/slices/FractionSlice"
 
 type WorkPlaceProps = {
@@ -30,6 +30,7 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
   })
 
   const sum = rowSum(row)
+  const rowFractionArray = toFractionArray(row)
   const questionSum = getFractionArraySum(question)
 
   const questionFraction = composeFraction(question)
@@ -50,7 +51,7 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
             {getFractionString(questionFraction)}
           </HoverCardTrigger>}
           <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
-            <FractionValue n={questionSum} />
+            <FractionValue fractionArray={question} />
           </HoverCardContent>
           <HoverCardContent side="right" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
             {`${question.length} Block${question.length !== 1 ? 's' : ''}`}
@@ -60,7 +61,35 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
         {row.map((f, i) => <FractionBlock fraction={f} key={`key-${i}`} />)}
       </HoverCardTrigger>
       <HoverCardContent side="left" className={`flex gap-2 justify-between w-fit text-sm p-1 text-white ${mode === 'sandbox' ? "bg-neutral-800" : isCorrect ? "bg-green-500" : "bg-red-500"}`}>
-          <FractionValue n={sum} />
+          <FractionValue showFraction={true} fractionArray={rowFractionArray} />
+      </HoverCardContent>
+    </HoverCard>
+  )
+}
+
+type ComparisonQuestionCardProps = {
+  index: number
+  question: NumberFraction[]
+}
+
+export const ComparisonQuestionCard: React.FC<ComparisonQuestionCardProps> = ({index, question}) => {
+
+  const display = getFractionString(composeFraction(question))
+  return (
+    <HoverCard>
+      <div className="relative flex-1 flex justify-center items-center bg-neutral-900 rounded-2xl text-white text-4xl">
+        <HoverCardTrigger>
+          {display}  
+        </HoverCardTrigger>
+        <div className={`absolute size-16 bg-neutral-900 rounded-md flex justify-center items-center left-1/2 -translate-x-1/2 ${index === 0 ? "-top-4 -translate-y-full" : "-bottom-4 translate-y-full"}`}>
+          {index === 0 ? <ArrowBigUp /> : <ArrowBigDown />}
+        </div>
+      </div>
+      <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-900 border-0 text-white`}>
+        <FractionValue fractionArray={question} />
+      </HoverCardContent>
+      <HoverCardContent side="bottom" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-900 border-0 text-white`}>
+        {`Using ${question.length} Block${question.length !== 1 ? 's' : ''}`}
       </HoverCardContent>
     </HoverCard>
   )
@@ -72,7 +101,6 @@ export const WorkPlace: React.FC<WorkPlaceProps> = ({}) => {
   const dispatch = useAppDispatch()
   const [gridLines, setGridLines] = useState(defaultGridLines)
 
-  const questionValues = questions.map(q => getFractionString(composeFraction(q)))
   const allCorrect = questions.every((q, i) => isSameNumber(rowSum(rows[i]), getFractionArraySum(q)))
 
   return (
@@ -89,12 +117,7 @@ export const WorkPlace: React.FC<WorkPlaceProps> = ({}) => {
         <>
         <DropRow key={`dropRow-${0}`} index={0} row={rows[0]} question={questions[0]} />
         <div className="w-full flex gap-8 p-4">
-          <div className="relative flex-1 flex justify-center items-center bg-neutral-900 rounded-2xl text-white text-4xl">
-            {questionValues[0]}
-            <div className="absolute size-16 bg-neutral-900 rounded-md flex justify-center items-center -top-4 -translate-y-full left-1/2 -translate-x-1/2">
-              <ArrowBigUp />
-            </div>
-          </div>
+          <ComparisonQuestionCard question={questions[0]} index={0} />
           <div className="flex flex-col gap-4 text-2xl font-bold font-mono">
             {['>', '=', '<'].map(c => 
               <Button key={c} disabled={!allCorrect} onClick={() => dispatch(setChosenOperator({chosen: c as ChosenChoices}))} className="size-16 text-2xl font-bold font-mono" variant={c === chosen ? "default" : "outline"} size='icon'>
@@ -102,12 +125,7 @@ export const WorkPlace: React.FC<WorkPlaceProps> = ({}) => {
               </Button>
             )}
           </div>
-          <div className="relative flex-1 flex justify-center items-center bg-neutral-900 rounded-2xl text-white text-4xl">
-            {questionValues[1]}
-            <div className="absolute size-16 bg-neutral-900 rounded-md flex justify-center items-center -bottom-4 translate-y-full left-1/2 -translate-x-1/2">
-              <ArrowBigDown />
-            </div>
-          </div>
+          <ComparisonQuestionCard question={questions[1]} index={1} />
         </div>
         <DropRow key={`dropRow-${1}`} index={1} row={rows[1]} question={questions[1]} />
         </>}

@@ -1,4 +1,8 @@
-import { NumberFraction } from "./types";
+import { Fraction, NumberFraction } from "./types";
+
+export const toFractionArray = (row: Fraction[]): NumberFraction[] => {
+  return row.map(f => ({numerator: 1, denominator: f.type}))
+}
 
 export const getFractionArraySum = (array: NumberFraction[]): number => {
   return (array.reduce((sum, f) => sum + f.numerator/f.denominator, 0))
