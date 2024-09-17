@@ -51,7 +51,7 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
             {getFractionString(questionFraction)}
           </HoverCardTrigger>}
           <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
-            <FractionValue fractionArray={question} />
+            <FractionValue showFraction={true} fractionArray={question} />
           </HoverCardContent>
           <HoverCardContent side="right" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
             {`${question.length} Block${question.length !== 1 ? 's' : ''}`}
