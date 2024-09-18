@@ -22,6 +22,7 @@ const OnesBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners
     <div ref={ref} {...attributes} {...listeners} style={style} className={`flex justify-center items-center ${isSmall ? "size-5" : "size-7"} transition-colors duration-300 border-2 border-black rounded-md ${isDragging ? "bg-neutral-200" : "bg-brown"}`} />
   )
 })
+OnesBlock.displayName = 'OnesBlock'
 
 const TensBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners, style, isDragging, isSmall=false}, ref) => {
   return (
@@ -32,6 +33,7 @@ const TensBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners
     </div>
   )
 })
+TensBlock.displayName = 'TensBlock'
 
 const HundredsBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners, style, isDragging, isSmall=false}, ref) => {
   return (
@@ -42,6 +44,7 @@ const HundredsBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, liste
     </div>
   )
 })
+HundredsBlock.displayName = 'HundredsBlock'
 
 export const BaseTenBlock: React.FC<BaseTenBlockProps> = ({ block }) => {
 

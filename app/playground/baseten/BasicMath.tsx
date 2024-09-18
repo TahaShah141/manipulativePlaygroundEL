@@ -72,12 +72,12 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
           {displayBlocks.map((block, i) => {
             if (block instanceof Array) {
               return (
-                <div className="flex flex-col">
-                  {block.map((subBlock, j) => <BaseTenBlock block={subBlock} />)}
+                <div key={`block-${i}`} className="flex flex-col">
+                  {block.map((subBlock, j) => <BaseTenBlock block={subBlock} key={`subBlock-${i}-${j}`} />)}
                 </div>
               )
             } else {
-              return <BaseTenBlock block={block} />
+              return <BaseTenBlock key={`block-${i}`} block={block} />
             }
           })}
         </div>
@@ -91,12 +91,12 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
             {displayBlocksOne.map((block, i) => {
               if (block instanceof Array) {
                 return (
-                  <div className="flex flex-col">
-                    {block.map((subBlock, j) => <BaseTenBlock block={subBlock} />)}
+                  <div key={`block-${i}`} className="flex flex-col">
+                    {block.map((subBlock, j) => <BaseTenBlock block={subBlock} key={`subBlock-${i}-${j}`} />)}
                   </div>
                 )
               } else {
-                return <BaseTenBlock block={block} />
+                return <BaseTenBlock key={`block-${i}`} block={block} />
               }
             })}
           </div>
@@ -108,12 +108,12 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
             {displayBlocksTwo.map((block, i) => {
               if (block instanceof Array) {
                 return (
-                  <div className="flex flex-col">
-                    {block.map((subBlock, j) => <BaseTenBlock block={subBlock} />)}
+                  <div key={`block-${i}`} className="flex flex-col">
+                    {block.map((subBlock, j) => <BaseTenBlock block={subBlock} key={`subBlock-${i}-${j}`} />)}
                   </div>
                 )
               } else {
-                return <BaseTenBlock block={block} />
+                return <BaseTenBlock key={`block-${i}`} block={block} />
               }
             })}
           </div>

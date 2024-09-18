@@ -30,12 +30,12 @@ export const Sandbox: React.FC<SandboxProps> = () => {
           {displayBlocks.map((block, i) => {
             if (block instanceof Array) {
               return (
-                <div className="flex flex-col">
-                  {block.map((subBlock, j) => <BaseTenBlock block={subBlock} />)}
+                <div key={`block-${i}`} className="flex flex-col">
+                  {block.map((subBlock, j) => <BaseTenBlock key={`subBlock-${i}-${j}`} block={subBlock} />)}
                 </div>
               )
             } else {
-              return <BaseTenBlock block={block} />
+              return <BaseTenBlock key={`block-${i}`} block={block} />
             }
           })}
         </div>
