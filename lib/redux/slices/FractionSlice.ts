@@ -15,6 +15,7 @@ interface FractionState {
   mode: string
   colors: boolean
   chosen?: ChosenChoices
+  isDifficult: boolean
 }
 
 const initialState: FractionState = {
@@ -25,6 +26,7 @@ const initialState: FractionState = {
   labels: true,
   mode:'sandbox',
   colors: true,
+  isDifficult: false
 }
 
 export const FractionSlice = createSlice({
@@ -35,6 +37,15 @@ export const FractionSlice = createSlice({
       state.colors = !state.colors
     },
 
+    toggleDifficulty: (state) => {
+      state.isDifficult = !state.isDifficult
+      if (state.mode === 'fill the gaps') {
+        const n = state.isDifficult ? 12 : 10
+        state.rows = Array.from({length: n}, () => [])
+        state.questions = generateNewQuestions(state.scale, n)
+      }
+    },
+
     setChosenOperator: (state, action: PayloadAction<{chosen: ChosenChoices}>) => {
       state.chosen = action.payload.chosen
     },
@@ -43,12 +54,14 @@ export const FractionSlice = createSlice({
       const { mode } = action.payload
       state.mode = mode
 
-      state.rows = Array.from({length: 12}, () => [])
       state.chosen = undefined
       if (mode === 'sandbox') {
+        state.rows = Array.from({length: 12}, () => [])
         state.questions = Array.from({length: 12}, () => [])
       } else if (mode === 'fill the gaps') {
-        state.questions = generateNewQuestions(state.scale, 12)
+        const n = state.isDifficult ? 12 : 10
+        state.rows = Array.from({length: n}, () => [])
+        state.questions = generateNewQuestions(state.scale, n)
       } else if (mode === 'comparisons') {
         state.rows = Array.from({length: 2}, () => [])
         state.questions = generateNewQuestions(state.scale, 2, false)
@@ -58,7 +71,7 @@ export const FractionSlice = createSlice({
     nextQuestions: (state) => {
       state.rows = state.rows.map(r => [])
       state.chosen = undefined
-      state.questions = generateNewQuestions(state.scale, state.questions.length, state.mode !== 'comparisons')
+      state.questions = generateNewQuestions(state.scale, state.questions.length)
     },
 
     clearRows: (state) => {
@@ -75,6 +88,7 @@ export const FractionSlice = createSlice({
       if ((sum + 1/fraction.type > state.scale)) return;
       state.rows[index].push(fraction)
     },
+    
     
     moveIntoRow: (state, action: PayloadAction<{index: number, fraction: Fraction}>) => {
       const { index, fraction } = action.payload
@@ -133,6 +147,7 @@ export const {
   deleteFraction,
   toggleScale,
   toggleColors,
+  toggleDifficulty,
   toggleFullTray,
   nextQuestions,
   changeMode,

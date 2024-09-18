@@ -25,14 +25,24 @@ export const newRandomFraction = (upper: number, N: number = 12): NumberFraction
   while (true) {
     // const toChoose = Math.floor(Math.random()*12) + 1
     // const toChoose = getRandomTriangularInt(N)
-    const toChoose = getRandomExponentialInt(N)
-    let sum: NumberFraction[] = []
-    for (let i = 0; i < toChoose; i++) {
-      const chosen = chooseRandom(harmonicNumbers)
-      sum.push(chosen)
-    }
-    if (getFractionArraySum(sum) <= upper) return sum
+    
+    // const toChoose = getRandomExponentialInt(N)
+    // let sum: NumberFraction[] = []
+    // for (let i = 0; i < toChoose; i++) {
+    //   const chosen = chooseRandom(harmonicNumbers)
+    //   sum.push(chosen)
+    // }
+    // if (getFractionArraySum(sum) <= upper) return sum
+    
+    const denominator = randInt(12, 1)
+    const numerator = randInt(denominator, 1)
+    return Array.from({length: numerator}, () => ({numerator: 1, denominator}))
   }
+
+}
+
+export const randInt = (n: number, min: number = 0): number => {
+  return Math.floor(Math.random() * n) + min
 }
 
 export const getRandomTriangularInt = (N: number): number => {
@@ -67,7 +77,7 @@ export const getRandomExponentialInt = (N: number): number => {
   return N;
 }
 
-export const generateNewQuestions = (upper: number, n: number = 12, sorting: boolean=true): NumberFraction[][] => {
+export const generateNewQuestions = (upper: number, n: number = 12, sorting: boolean=false): NumberFraction[][] => {
   if (sorting)
     return Array.from({length: n}, () => newRandomFraction(upper)).sort((a, b) => - getFractionArraySum(a) + getFractionArraySum(b))
   else

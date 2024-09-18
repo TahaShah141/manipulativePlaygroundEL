@@ -2,7 +2,7 @@ import { useDroppable } from "@dnd-kit/core"
 import { FractionBlock } from "./FractionBlock"
 import { Fraction, NumberFraction } from "@/lib/types"
 import { FractionState, useAppDispatch } from "@/lib/redux/hooks"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
 import { FractionValue } from "./FractionValue"
@@ -21,7 +21,7 @@ type DropRowProps = {
 }
 
 const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
-  const { scale, mode } = FractionState()
+  const { scale, mode, isDifficult } = FractionState()
   const { isOver, setNodeRef: dropRef } = useDroppable({ 
     id: `row-${index}`, 
     data: {
@@ -40,7 +40,7 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
   return (
     <HoverCard>
       <HoverCardTrigger ref={dropRef} className={`${isOver ? 'bg-neutral-950' : 'bg-neutral-900'} relative min-h-12 flex overflow-x-visible`}>
-        {mode !== 'sandbox' &&
+        {mode !== 'sandbox' && (isDifficult || mode === 'comparisons') &&
         <>
         <div className={`absolute -right-2 translate-x-full rounded-md top-1/2 -translate-y-1/2 flex justify-center items-center size-8 border-2 ${isCorrect ? 'bg-green-500 border-green-400' : 'bg-red-500 border-red-600'}`}>
           {isCorrect ? <CheckIcon /> : <XIcon />}
@@ -95,21 +95,72 @@ export const ComparisonQuestionCard: React.FC<ComparisonQuestionCardProps> = ({i
   )
 }
 
+type MainQuestionProps = {
+  question: NumberFraction[]
+}
+
+const MainQuestion: React.FC<MainQuestionProps> = ({question}) => {
+
+  const questionSum = getFractionArraySum(question)
+  const questionFraction = composeFraction(question)
+  const { scale, rows } = FractionState()
+
+  const isCorrect = rows.some(r => isSameNumber(rowSum(r), questionSum))
+  
+  return (
+    <div className={`bg-neutral-900 relative min-h-12 flex overflow-x-visible`}>
+      <HoverCard>
+        <HoverCardTrigger className={`absolute left-0 top-0 bottom-0 flex justify-center items-center border-r border-white text-white ${isCorrect ? "bg-green-500" : "bg-red-500"}`} style={{width: `${questionSum*(100/scale)}%`}}>
+          {getFractionString(questionFraction)}
+        </HoverCardTrigger>
+        <HoverCardContent side="top" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
+          <FractionValue showFraction={true} fractionArray={question} />
+        </HoverCardContent>
+        <HoverCardContent side="right" className={`flex gap-2 justify-between w-fit text-sm p-1 bg-neutral-700 text-white`}>
+          {`${question.length} Block${question.length !== 1 ? 's' : ''}`}
+        </HoverCardContent>
+      </HoverCard> 
+    </div>
+  )
+}
+
 export const WorkPlace: React.FC<WorkPlaceProps> = ({}) => {
 
-  const { rows, questions, scale, mode, chosen } = FractionState()
+  const { rows, questions, scale, mode, chosen, isDifficult } = FractionState()
   const dispatch = useAppDispatch()
   const [gridLines, setGridLines] = useState(defaultGridLines)
+
+  const mainQuestion = questions[0]
+
+  useEffect(() => {
+    const questionFraction = composeFraction(mainQuestion)
+    if (mode === 'fill the gaps' && !isDifficult) {
+      if (!defaultGridLines.find(g => isSameNumber(g.value, getFractionArraySum(mainQuestion)))) {
+        setGridLines([...defaultGridLines, {
+          displayed: true,
+          value: questionFraction.numerator/questionFraction.denominator,
+          name: getFractionString(questionFraction),
+        }])
+      } else {
+        setGridLines(defaultGridLines.map(l => 
+          isSameNumber(l.value, getFractionArraySum(mainQuestion)) ? {...l, displayed: true} : l
+        ))
+      }
+    } else {
+      setGridLines(defaultGridLines)
+    }
+  }, [mainQuestion, mode, isDifficult])
 
   const allCorrect = questions.every((q, i) => isSameNumber(rowSum(rows[i]), getFractionArraySum(q)))
 
   return (
-    <div className="flex flex-col gap-2 h-full" style={{flex: `${scale} 1 0%`}}>
+    <div className={`flex flex-col gap-2 h-full ${mode === 'fill the gaps' && !isDifficult ? "justify-between" : ""}`} style={{flex: `${scale} 1 0%`}}>
+      {mode === "fill the gaps" && !isDifficult && <MainQuestion question={mainQuestion} />}
       <div className={`flex relative flex-col ${mode === 'comparisons' ? "h-full justify-between" : ""}`}>
         {gridLines.map(g => 
           <React.Fragment key={g.value}>{g.value <= scale && <div className={`absolute top-0 bottom-0 w-0 ${g.displayed ? 'border-r border-neutral-500 border-dashed': "border-0"} z-20`} style={{left: `${g.value*(100/scale)}%`}}>
             <div className="relative">
-              <Button onClick={() => setGridLines(gridLines.map(gl => ({...gl, displayed: gl.name === g.name ? !gl.displayed : gl.displayed})))} variant={'ghost'} className="absolute top-0 -translate-y-full -translate-x-1/2 text-[8px] size-5 p-1">{g.name}</Button>
+              <Button onClick={() => setGridLines(gridLines.map(gl => ({...gl, displayed: gl.name === g.name ? !gl.displayed : gl.displayed})))} variant={'ghost'} className="absolute top-0 -translate-y-full -translate-x-1/2 text-[8px] h-5 p-1">{g.name}</Button>
             </div>
           </div>}</React.Fragment>
         )}
@@ -129,7 +180,7 @@ export const WorkPlace: React.FC<WorkPlaceProps> = ({}) => {
         </div>
         <DropRow key={`dropRow-${1}`} index={1} row={rows[1]} question={questions[1]} />
         </>}
-        {mode !== 'comparisons' && rows.map((row, i) => <DropRow key={`dropRow-${i}`} index={i} row={row} question={questions[i]} />)}
+        {mode !== 'comparisons' && rows.map((row, i) => <DropRow key={`dropRow-${i}`} index={i} row={row} question={isDifficult || mode === 'comparisons'  ? questions[i] : mainQuestion} />)}
       </div>
     </div>
   )
@@ -181,7 +232,7 @@ const defaultGridLines: GridLine[] = [
   {
     name: "1",
     value: 1,
-    displayed: true
+    displayed: false
   },
   {
     name: "1.5",
