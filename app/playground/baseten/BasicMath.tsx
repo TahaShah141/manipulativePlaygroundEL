@@ -3,6 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { BaseTenState } from "@/lib/redux/hooks"
 import { Block, Blocks } from "@/lib/types"
 import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
+import { useDroppable } from "@dnd-kit/core"
 import { Edit, MinusIcon, PlusIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { BaseTenBlock } from "./BaseTenBlock"
@@ -63,7 +64,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
   return (
     <>
     {showingAnswer ? 
-    <ScrollArea className={`h-[calc(100vh-64px)] relative rounded-lg p-4 flex-1 bg-neutral-800`}>
+    <ScrollArea className={`h-[calc(100vh-64px)] relative rounded-lg p-4 flex-1 bg-neutral-00`}>
       <Button onClick={() => setShowingAnswer(false)} size={"icon"} className="absolute top-0 right-0 bg-white">
         <Edit className="size-6" />
       </Button>
