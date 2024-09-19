@@ -19,7 +19,7 @@ type BlockProps = {
 
 const OnesBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners, style, isDragging, isSmall=false}, ref) => {
   return (
-    <div ref={ref} {...attributes} {...listeners} style={style} className={`flex justify-center items-center ${isSmall ? "size-5" : "size-6 xl:size-7"} transition-colors duration-300 border-2 border-black rounded-md ${isDragging ? "bg-neutral-200" : "bg-brown"}`} />
+    <div ref={ref} {...attributes} {...listeners} style={style} className={`flex justify-center items-center ${isSmall ? "size-5" : "size-2 md:size-3 lg:size-5 xl:size-7"} transition-colors duration-300 border-2 border-black rounded-md ${isDragging ? "bg-neutral-200" : "bg-brown"}`} />
   )
 })
 OnesBlock.displayName = 'OnesBlock'
@@ -28,7 +28,7 @@ const TensBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, listeners
   return (
     <div ref={ref} {...attributes} {...listeners} style={style} className={`flex flex-col transition-colors duration-300 rounded-md border border-black overflow-hidden ${isDragging ? "bg-blue-200" : "bg-blue-500"}`}>
       {Array.from({length: 10}, (_, i) => (
-        <div key={i} className={`${isSmall ? "size-5" : "size-6 xl:size-7"} border-black border`} />
+        <div key={i} className={`${isSmall ? "size-5" : "size-2 md:size-3 lg:size-5 xl:size-7"} border-black border`} />
       ))}
     </div>
   )
@@ -39,7 +39,7 @@ const HundredsBlock = forwardRef<HTMLDivElement, BlockProps>(({attributes, liste
   return (
     <div ref={ref} {...attributes} {...listeners} style={style} className={`grid grid-cols-10 grid-rows-10 transition-colors duration-300 rounded-md border-black border-2 overflow-hidden ${isDragging ? "bg-yellow-100" : "bg-yellow-300"}`}>
       {Array.from({length: 100}, (_, i) => (
-        <div key={i} className={`${isSmall ? "size-5" : "size-6 xl:size-7"} border-black border`} />
+        <div key={i} className={`${isSmall ? "size-5" : "size-2 md:size-3 lg:size-5 xl:size-7"} border-black border`} />
       ))}
     </div>
   )
