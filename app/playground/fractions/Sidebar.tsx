@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { FractionState, useAppDispatch } from "@/lib/redux/hooks"
-import { changeMode, clearRows, nextQuestions, toggleColors, toggleFullTray, toggleLabels, toggleScale } from "@/lib/redux/slices/FractionSlice"
+import { changeMode, clearRows, nextQuestions, toggleColors, toggleDifficulty, toggleFullTray, toggleLabels, toggleScale } from "@/lib/redux/slices/FractionSlice"
 
 type SidebarProps = {
 
@@ -14,7 +14,7 @@ const modes = [
 
 export const Sidebar: React.FC<SidebarProps> = ({}) => {
 
-  const { labels, colors, scale, fullTray, mode: currentMode } = FractionState()
+  const { labels, colors, scale, fullTray, mode: currentMode, isDifficult } = FractionState()
   const dispatch = useAppDispatch()
 
   return (
@@ -24,7 +24,9 @@ export const Sidebar: React.FC<SidebarProps> = ({}) => {
       </div>
 
       <div className="flex flex-col p-4 bg-neutral-900 rounded-md gap-2">
-        <Button variant={"secondary"} className='' onClick={() => dispatch(clearRows())}>Clear All</Button>
+        {currentMode === 'sandbox' ? 
+        <Button variant={"secondary"} className='' onClick={() => dispatch(clearRows())}>Clear All</Button> :
+        <Button variant={"secondary"} className='' onClick={() => dispatch(toggleDifficulty())}>{`Set ${isDifficult ? "Easy" : "Hard"} Mode`}</Button>}
         <Button variant={"secondary"} className='' onClick={() => dispatch(toggleColors())}>{`${colors ? "Hide" : "Show"} Colors`}</Button>
         <Button variant={"secondary"} className='' onClick={() => dispatch(toggleLabels())}>{`${labels ? "Hide" : "Show"} Labels`}</Button>
         <Button variant={"secondary"} className='' onClick={() => dispatch(toggleFullTray())}>{fullTray ? "Show Each Block" : "Show Full Tray"}</Button>
