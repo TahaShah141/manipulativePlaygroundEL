@@ -1,10 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useDroppable } from "@dnd-kit/core"
-import { BaseTenBlock } from "./BaseTenBlock"
 import { BaseTenState } from "@/lib/redux/hooks"
-import { useEffect, useState } from "react"
-import { getNum, groupOnes } from "@/lib/utils"
 import { Blocks } from "@/lib/types"
+import { getNum, groupOnes } from "@/lib/utils"
+import { useDroppable } from "@dnd-kit/core"
+import { useEffect, useState } from "react"
+import { BaseTenBlock } from "./BaseTenBlock"
 
 type TriviaProps = {
 }
@@ -25,9 +25,9 @@ export const Trivia: React.FC<TriviaProps> = () => {
 
   return (
 
-    <ScrollArea ref={dropRef} className={`h-[calc(100vh-64px)] rounded-lg p-4 flex-1 ${isOver ? "bg-neutral-700" : "bg-neutral-800"}`}>
+    <ScrollArea ref={dropRef} className={`h-[calc(100vh-16px)] lg:h-[calc(100vh-32px)] xl:h-[calc(100vh-64px)] rounded-lg p-4 flex-1 ${isOver ? "bg-neutral-700" : "bg-neutral-800"}`}>
       <div className={`p-1 flex flex-col`}>
-        <div className='gap-2 flex flex-wrap'>
+        <div className='gap-1 xl:gap-2 flex flex-wrap'>
           {displayBlocks.map((block, i) => {
             if (block instanceof Array) {
               return (

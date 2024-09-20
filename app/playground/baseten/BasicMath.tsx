@@ -1,11 +1,11 @@
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useDroppable } from "@dnd-kit/core"
-import { BaseTenState } from "@/lib/redux/hooks"
-import { useEffect, useState } from "react"
-import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
-import { Block, Blocks } from "@/lib/types"
 import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { BaseTenState } from "@/lib/redux/hooks"
+import { Block, Blocks } from "@/lib/types"
+import { getBlocks, getNum, getType, getWholeSum, groupOnes } from "@/lib/utils"
+import { useDroppable } from "@dnd-kit/core"
 import { Edit, MinusIcon, PlusIcon } from "lucide-react"
+import { useEffect, useState } from "react"
 import { BaseTenBlock } from "./BaseTenBlock"
 
 type BasicMathProps = {
@@ -64,7 +64,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
   return (
     <>
     {showingAnswer ? 
-    <ScrollArea className={`h-[calc(100vh-64px)] relative rounded-lg p-4 flex-1 bg-neutral-800`}>
+    <ScrollArea className={`h-[calc(100vh-16px)] lg:h-[calc(100vh-32px)] xl:h-[calc(100vh-64px)] relative rounded-lg p-4 flex-1 bg-neutral-800`}>
       <Button onClick={() => setShowingAnswer(false)} size={"icon"} className="absolute top-0 right-0 bg-white">
         <Edit className="size-6" />
       </Button>
@@ -86,7 +86,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
     </ScrollArea> : 
     <div className="flex relative flex-col flex-1 gap-2">
       <Button onClick={() => setShowingAnswer(true)} size="icon" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 p-2 rounded-full">{operator === '+' ? <PlusIcon className="size-12" /> : <MinusIcon className="size-12" />}</Button>
-      <ScrollArea ref={dropRefOne} className={`h-[calc(50vh-36px)] rounded-lg p-4 ${isOverOne ? "bg-neutral-700" : "bg-neutral-800"}`}>
+      <ScrollArea ref={dropRefOne} className={`h-[calc(50vh-9px)] lg:h-[calc(50vh-18px)] xl:h-[calc(50vh-36px)] rounded-lg p-4 ${isOverOne ? "bg-neutral-700" : "bg-neutral-800"}`}>
         <div className={`p-1 flex flex-col`}>
           <div className='gap-2 flex flex-wrap'>
             {displayBlocksOne.map((block, i) => {
@@ -103,7 +103,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
           </div>
         </div>
       </ScrollArea>
-      <ScrollArea ref={dropRefTwo} className={`h-[calc(50vh-36px)] rounded-lg p-4 ${isOverTwo ? "bg-neutral-700" : "bg-neutral-800"}`}>
+      <ScrollArea ref={dropRefTwo} className={`h-[calc(50vh-9px)] lg:h-[calc(50vh-18px)] xl:h-[calc(50vh-36px)] rounded-lg p-4 ${isOverTwo ? "bg-neutral-700" : "bg-neutral-800"}`}>
         <div className={`p-1 flex flex-col`}>
           <div className='gap-2 flex flex-wrap'>
             {displayBlocksTwo.map((block, i) => {
