@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Block, Blocks, BlockTypes, Fraction, NumberFraction } from "./types";
+import { Block, Blocks, BlockTypes, Fraction, LineType, NumberFraction } from "./types";
 import { v4 as randomID } from "uuid"
 import { getFractionArraySum } from "./fractions";
 
@@ -176,4 +176,21 @@ export const getBlocks = (n: number): number[] => {
   newBlocks.push(Array(tens).fill(10))
   newBlocks.push(Array(hundreds).fill(100))
   return shuffleArray(newBlocks.flat()) 
+}
+
+export const getLength = (line: LineType): number => {
+  const { start, end } = line
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const d = Math.sqrt(dx*dx + dy*dy)
+  return d
+}
+
+export const getAngle = (line: LineType): number => {
+  const { start, end } = line
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const angle = Math.atan2(dy, dx)
+  // return angle in degrees
+  return angle * 180 / Math.PI
 }
