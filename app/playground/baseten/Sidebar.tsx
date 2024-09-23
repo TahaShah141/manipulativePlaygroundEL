@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { BaseTenState, useAppDispatch } from "@/lib/redux/hooks"
 import { clearBoard, clearSelected, deleteSelected, groupSelected, nextQuestion, randomizeBoard, setMode, splitSelected, switchRole, toggleDisplay, toggleGrouping, toggleSorting } from "@/lib/redux/slices/BaseTenSlice"
 import { getNum, getType, getWholeSum } from "@/lib/utils"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type SidebarProps = {
 }
@@ -27,6 +27,20 @@ export const Sidebar: React.FC<SidebarProps> = () => {
   const sumOne = getWholeSum(blocks.filter(b => b.source === 'operandOne'))
   const sumTwo = getWholeSum(blocks.filter(b => b.source === 'operandTwo'))
 
+  const [width, setWidth] = useState(-1)
+  const [height, setHeight] = useState(-1)
+
+  useEffect(() => {
+    const handleSizeChange = () => {
+      setWidth(window.innerWidth)
+      setHeight(window.innerHeight)
+    }
+
+    handleSizeChange()
+    window.addEventListener('resize', handleSizeChange)
+    return () => window.removeEventListener('resize', handleSizeChange)
+  }, [window.innerWidth, window.innerHeight])
+
   const correctAnswer = (
     mode === 'trivia' ? (
       role === 'board' ? 
@@ -46,10 +60,10 @@ export const Sidebar: React.FC<SidebarProps> = () => {
   )
 
   return (
-    <ScrollArea className={`h-[calc(100vh-16px)] lg:h-[calc(100vh-32px)] xl:h-[calc(100vh-64px)]`}>
+    <ScrollArea className={`h-[calc(100vh-16px)] lg:h-[calc(100vh-32px)] xl:h-[calc(100vh-64px)] w-64 lg:w-72 xl:w-80`}>
       <div className="flex flex-col gap-1 lg:gap-2 xl:gap-4 justify-between h-full">
-        <div className="bg-neutral-800 rounded-lg flex flex-col gap-1 lg:gap-2 xl:gap-4 p-2 xl:p-4 w-64 lg:w-72 xl:w-96">
-          <h1 className='text-xl lg:text-2xl xl:text-3xl font-bold font-mono text-white text-center'>Base-10 Blocks</h1>
+        <div className="bg-neutral-800 rounded-lg flex flex-col gap-1 lg:gap-2 xl:gap-4 p-2 xl:p-4">
+          <h1 className='text-xl lg:text-2xl xl:text-3xl font-bold font-mono text-white text-center'>{`${width}x${height}`}</h1>
 
           {(mode === 'sandbox') && <h4 className={`text-5xl xl:text-7xl font-bold font-mono text-white text-center ${!display && "text-neutral-700"}`}>{!display ? "???" : getWholeSum(blocks)}</h4>}
           {(mode !== 'sandbox' && role === 'board') && 
@@ -71,7 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = () => {
             </>}
         </div>
 
-        <div className="bg-neutral-900 rounded-lg grid grid-cols-2 gap-1 lg:gap-2 xl:gap-4 p-2 xl:p-4 w-64 lg:w-72 xl:w-96">
+        <div className="bg-neutral-900 rounded-lg grid grid-cols-2 gap-1 lg:gap-2 xl:gap-4 p-2 xl:p-4">
           <Button className="text-[10px] md:text-xs lg:text-[14px]" disabled={selectedBlocks.length === 0 || selectedBlocks.every(b => b.type === "ONES")} onClick={() => dispatch(splitSelected())}>{`Split Selected`}</Button>
           <Button className="text-[10px] md:text-xs lg:text-[14px]" disabled={selectedBlocks.length !== 10 || selectedBlocks.some(b => b.type !== selectedBlocks[0].type || b.source !== selectedBlocks[0].source)} 
           onClick={() => dispatch((groupSelected({source: selectedBlocks[0].source, type: getType(getNum(selectedBlocks[0].type)*10)})))}>{`Group Selected`}</Button>
@@ -79,13 +93,13 @@ export const Sidebar: React.FC<SidebarProps> = () => {
           <Button className="text-[10px] md:text-xs lg:text-[14px]" disabled={role === 'text' || selectedBlocks.length === 0} onClick={() => dispatch(deleteSelected())}>{`Delete Selected`}</Button>
         </div>
 
-        <div className="bg-neutral-900 rounded-lg flex flex-col gap-1 lg:gap-2 xl:gap-4 p-2 lg:p-4 w-64 lg:w-72 xl:w-96">
+        <div className="bg-neutral-900 rounded-lg flex flex-col gap-1 lg:gap-2 xl:gap-4 p-2 lg:p-4">
           {mode === 'sandbox' && <Button className="text-[10px] md:text-xs lg:text-[14px]" variant={"secondary"} onClick={() => dispatch(toggleDisplay())}>{`${!display ? "Show" : "Hide"} Sum`}</Button>}
           <Button className="text-[10px] md:text-xs lg:text-[14px]" variant={"secondary"} onClick={() => dispatch(toggleSorting())}>{`${sorting ? "Disable" : "Enable"} Sorting`}</Button>
           <Button className="text-[10px] md:text-xs lg:text-[14px]" variant={"secondary"} onClick={() => dispatch(toggleGrouping())}>{`${grouping ? "Disable" : "Enable"} Grouping`}</Button>
         </div>
 
-        <div className="grid grid-cols-2 gap-1 lg:gap-2 xl:gap-4 w-64 lg:w-72 xl:w-96">
+        <div className="grid grid-cols-2 gap-1 lg:gap-2 xl:gap-4">
           {modes.map(m => 
             <Button className="capitalize text-[10px] md:text-xs lg:text-[14px]" key={m} variant={m === mode ? "default" : "outline"} onClick={() => dispatch(setMode({mode: m}))}>{m}</Button>
           )}
