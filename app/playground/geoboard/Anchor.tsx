@@ -1,8 +1,13 @@
 
-export const Anchor = () => {
+type AnchorProps = {
+  hovering: boolean
+  setHovered: () => void
+}
+
+export const Anchor: React.FC<AnchorProps> = ({hovering, setHovered}) => {
   return (
-    <div className="size-full flex justify-center items-center">
-      <div className="rounded-full border-2 border-white bg-neutral-400 size-2 lg:size-4">
+    <div onMouseEnter={setHovered} className="size-full flex justify-center items-center">
+      <div className={`rounded-full border-2 border-white ${hovering ? "bg-red-400" : "bg-neutral-400"} size-2 lg:size-4`}>
 
       </div>
     </div>
