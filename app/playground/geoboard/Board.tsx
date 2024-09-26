@@ -16,7 +16,7 @@ export const Board = () => {
   let points = [2, 3, 3, 1, 5, 1, 6, 4, 4, 8]
 
   const prevPolygon = MakePolygon(points)
-  if (hovered !== -1 && canAddNewPoint(prevPolygon, {x: hoveredX, y: hoveredY})) {
+  if (hovered !== -1 && (true || canAddNewPoint(prevPolygon, {x: hoveredX, y: hoveredY}))) {
     points.push(hoveredX, hoveredY)
   }
   

@@ -39,7 +39,7 @@ const DropRow: React.FC<DropRowProps> = ({index, row, question}) => {
 
   return (
     <HoverCard>
-      <HoverCardTrigger ref={dropRef} className={`${isOver ? 'bg-neutral-950' : 'bg-neutral-900'} relative min-h-12 flex overflow-x-visible`}>
+      <HoverCardTrigger ref={dropRef} className={`${isOver ? 'bg-neutral-950' : 'bg-neutral-900'} relative min-h-11 flex overflow-x-visible`}>
         {mode !== 'sandbox' && (isDifficult || mode === 'comparisons') &&
         <>
         <div className={`absolute -right-2 translate-x-full rounded-md top-1/2 -translate-y-1/2 flex justify-center items-center size-8 border-2 ${isCorrect ? 'bg-green-500 border-green-400' : 'bg-red-500 border-red-600'}`}>
@@ -108,7 +108,7 @@ const MainQuestion: React.FC<MainQuestionProps> = ({question}) => {
   const isCorrect = rows.some(r => isSameNumber(rowSum(r), questionSum))
   
   return (
-    <div className={`bg-neutral-900 relative min-h-12 flex overflow-x-visible`}>
+    <div className={`bg-neutral-900 relative min-h-11 flex overflow-x-visible`}>
       <HoverCard>
         <HoverCardTrigger className={`absolute left-0 top-0 bottom-0 flex justify-center items-center border-r border-white text-white ${isCorrect ? "bg-green-500" : "bg-red-500"}`} style={{width: `${questionSum*(100/scale)}%`}}>
           {getFractionString(questionFraction)}

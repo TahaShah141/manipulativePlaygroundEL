@@ -37,9 +37,9 @@ export const Polygon: React.FC<PolygonProps> = ({polygon}) => {
   return (
     <>
     {lines.map(({start, color}, i) =>
-      <div className={`absolute opacity-40 flex justify-between h-px`} 
+      <div className={`absolute opacity-40 flex justify-between h-4`} 
       style={{
-        backgroundColor: i % 2 === 0 ? color : "#ff0000", 
+        backgroundColor: color, 
         top: `${offset.y + step*start.y}%`, 
         left: `${offset.x + step*start.x}%`,
         width: `${getLength(lines[i])*step}%`,
@@ -47,9 +47,9 @@ export const Polygon: React.FC<PolygonProps> = ({polygon}) => {
         transformOrigin: '0% 50%',
         transform: `translateY(-50%) rotate(${getAngle(lines[i])}deg)`
       }}>
-        <div className="size-px rounded-full -translate-x-1/2" style={{backgroundColor: i % 2 === 0 ? color : "#ff0000"}}/>
-          <p>{i}</p>
-        <div className="size-px rounded-full translate-x-1/2" style={{backgroundColor: i % 2 === 0 ? color : "#ff0000"}}/>
+        <div className="size-4 rounded-full -translate-x-1/2" style={{backgroundColor: color}}/>
+          {/* <p>{i}</p> */}
+        <div className="size-4 rounded-full translate-x-1/2" style={{backgroundColor: color}}/>
       </div>
     )}
     </>
