@@ -86,7 +86,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
     </ScrollArea> : 
     <div className="flex relative flex-col flex-1 gap-2">
       <Button onClick={() => setShowingAnswer(true)} size="icon" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 p-2 rounded-full">{operator === '+' ? <PlusIcon className="size-12" /> : <MinusIcon className="size-12" />}</Button>
-      <ScrollArea ref={dropRefOne} className={`h-[calc(50vh-9px)] lg:h-[calc(50vh-18px)] xl:h-[calc(50vh-36px)] rounded-lg p-4 ${isOverOne ? "bg-neutral-700" : "bg-neutral-800"}`}>
+      <ScrollArea ref={dropRefOne} className={`h-[calc(50vh-14px)] lg:h-[calc(50vh-26px)] xl:h-[calc(50vh-36px)] rounded-lg p-4 ${isOverOne ? "bg-neutral-700" : "bg-neutral-800"}`}>
         <div className={`p-1 flex flex-col`}>
           <div className='gap-2 flex flex-wrap'>
             {displayBlocksOne.map((block, i) => {
@@ -103,7 +103,7 @@ export const BasicMath: React.FC<BasicMathProps> = () => {
           </div>
         </div>
       </ScrollArea>
-      <ScrollArea ref={dropRefTwo} className={`h-[calc(50vh-9px)] lg:h-[calc(50vh-18px)] xl:h-[calc(50vh-36px)] rounded-lg p-4 ${isOverTwo ? "bg-neutral-700" : "bg-neutral-800"}`}>
+      <ScrollArea ref={dropRefTwo} className={`h-[calc(50vh-14px)] lg:h-[calc(50vh-26px)] xl:h-[calc(50vh-36px)] rounded-lg p-4 ${isOverTwo ? "bg-neutral-700" : "bg-neutral-800"}`}>
         <div className={`p-1 flex flex-col`}>
           <div className='gap-2 flex flex-wrap'>
             {displayBlocksTwo.map((block, i) => {
