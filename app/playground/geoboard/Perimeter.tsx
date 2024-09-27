@@ -35,7 +35,7 @@ export const Perimeter: React.FC<PerimeterProps> = ({color, points}) => {
   return (
     <>
     {lines.map(({start}, i) =>
-      <div className={`absolute opacity-50 flex justify-between h-2`} 
+      <div key={`line-${i}`} className={`absolute opacity-50 flex justify-between h-2`} 
       style={{
         backgroundColor: color,
         top: `${offset.y + step*start.y}%`, 
