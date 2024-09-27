@@ -10,7 +10,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-
 export const shuffleArray = <T>(array: T[]): T[] => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -195,44 +194,6 @@ export const getAngle = (line: LineType): number => {
   return angle * 180 / Math.PI
 }
 
-// const orientation = (p: Vertex, q: Vertex, r: Vertex): number => {
-//   const val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-//   if (val === 0) return 0; // collinear
-//   return val > 0 ? 1 : 2; // 1 for clockwise, 2 for counterclockwise
-// };
-
-// const onSegment = (p: Vertex, q: Vertex, r: Vertex): boolean => {
-//   return (
-//     q.x <= Math.max(p.x, r.x) &&
-//     q.x >= Math.min(p.x, r.x) &&
-//     q.y <= Math.max(p.y, r.y) &&
-//     q.y >= Math.min(p.y, r.y)
-//   );
-// };
-
-// export const isIntersectingLines = (line1: LineType, line2: LineType): boolean => {
-//   const { start: p1, end: p2 } = line1;
-//   const { start: p3, end: p4 } = line2;
-
-//   const o1 = orientation(p1, p2, p3);
-//   const o2 = orientation(p1, p2, p4);
-//   const o3 = orientation(p3, p4, p1);
-//   const o4 = orientation(p3, p4, p2);
-
-//   // General case
-//   if (o1 !== o2 && o3 !== o4) {
-//     return true;
-//   }
-
-//   // Special Cases: Check for collinearity and on-segment conditions
-//   if (o1 === 0 && onSegment(p1, p3, p2)) return false; // line1 start is on line2
-//   if (o2 === 0 && onSegment(p1, p4, p2)) return false; // line1 end is on line2
-//   if (o3 === 0 && onSegment(p3, p1, p4)) return false; // line2 start is on line1
-//   if (o4 === 0 && onSegment(p3, p2, p4)) return false; // line2 end is on line1
-
-//   return false; // Doesn't fall in any of the above cases
-// };
-
 const isInsideLine = (p: Vertex, line: LineType): boolean => {
   const { start, end } = line
 
@@ -249,8 +210,16 @@ const isTerminalPoint = (p: Vertex, line: LineType): boolean => {
   return p.x === start.x && p.y === start.y || p.x === end.x && p.y === end.y
 }
 
+export const isSamePoints = (p1: Vertex, p2: Vertex): boolean => {
+  return (p1.x === p2.x && p1.y === p2.y)
+}
+
 const isSameLines = (line1: LineType, line2: LineType): boolean => {
-  return line1.start.x === line2.start.x && line1.start.y === line2.start.y && line1.end.x === line2.end.x && line1.end.y === line2.end.y
+  return (
+    (isSamePoints(line1.start, line2.start) && isSamePoints(line1.end, line2.end)) ||
+    (isSamePoints(line1.end, line2.start) && isSamePoints(line1.start, line2.end))
+  )
+
 }
 
 export const isIntersectingLines = (line1: LineType, line2: LineType): boolean => {
@@ -259,13 +228,7 @@ export const isIntersectingLines = (line1: LineType, line2: LineType): boolean =
   const { start: p1, end: p2 } = line1;
   const { start: p3, end: p4 } = line2;
 
-  // if (p1.x === p2.x) { 
-  //   const y = p3.y + (p4.y - p3.y) * (p1.x - p3.x) / (p4.x - p3.x)
-  //   return (y > Math.min(p1.y, p2.y) && y < Math.max(p1.y, p2.y))
-  // } else if (p3.x === p4.x) {
-  //   const y = p1.y + (p2.y - p1.y) * (p3.x - p1.x) / (p2.x - p1.x)
-  //   return (y > Math.min(p3.y, p4.y) && y < Math.max(p3.y, p4.y))
-  // }
+  //TO BE PERFECTED
 
   const a1 = p2.y - p1.y
   const b1 = p1.x - p2.x
@@ -310,7 +273,6 @@ export const MakePolygon = (coords: number[]): PolygonType => {
   
   return {
     color: "#f200f2",
-    filled: false,
     points
   }
 }

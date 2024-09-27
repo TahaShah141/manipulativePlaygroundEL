@@ -26,14 +26,12 @@ export type NumberFraction = {
 
 export type PolygonType = {
   points: Vertex[]
-  filled: boolean
   color: string
 }
 
 export type LineType = {
   start: Vertex
   end: Vertex
-  color: string
 }
 
 export type Vertex = {

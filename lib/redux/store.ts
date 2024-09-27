@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage"
 import { persistReducer, persistStore } from 'redux-persist'
 import baseTenReducer from '@/lib/redux/slices/BaseTenSlice'
 import fractionReducer from '@/lib/redux/slices/FractionSlice'
+import geoboardReducer from '@/lib/redux/slices/GeoboardSlice'
 
 const persistConfig = {
   key: 'root',
@@ -13,7 +14,8 @@ const persistConfig = {
 
 const reducer = combineReducers({
   baseten: baseTenReducer,
-  fraction: fractionReducer
+  fraction: fractionReducer,
+  geoboard: geoboardReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, reducer)
@@ -33,3 +35,4 @@ export type AppDispatch = AppStore['dispatch']
 
 export const selectBaseTenState = (state: RootState) => state.baseten
 export const selectFractionState = (state: RootState) => state.fraction
+export const selectGeoboardState = (state: RootState) => state.geoboard
