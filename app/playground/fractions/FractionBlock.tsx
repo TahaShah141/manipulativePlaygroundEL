@@ -41,7 +41,7 @@ export const FractionBlock: React.FC<FractionBlockProps> = ({fraction}) => {
 
   return (
     <HoverCard>
-      <div ref={dragRef} {...attributes} {...listeners} style={style} className={`relative group text-black flex-shrink-0 flex justify-center items-center border-black border ${colors ? fractionColors[(type-1)%4] : baseColor} h-12 text-sm font-mono`}>
+      <div ref={dragRef} {...attributes} {...listeners} style={style} className={`relative group text-black flex-shrink-0 flex justify-center items-center border-black border ${colors ? fractionColors[(type-1)%4] : baseColor} h-11 text-sm font-mono`}>
         {source !== 'tray' && <Button onClick={() => dispatch(deleteFraction({fraction}))} className="group-hover:flex hidden absolute top-0 right-0 size-5 p-1 rounded-sm hover:bg-black/15 hover:text-destructive" size="icon" variant={'ghost'}><XIcon /></Button>}
         <HoverCardTrigger>{labels && (type === 1 ? "1" : `1/${type}`)}</HoverCardTrigger>
       </div>

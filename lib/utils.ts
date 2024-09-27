@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { Block, Blocks, BlockTypes, Fraction, NumberFraction } from "./types";
+import { Block, Blocks, BlockTypes, Fraction, LineType, NumberFraction, PolygonType, Vertex } from "./types";
 import { v4 as randomID } from "uuid"
 import { getFractionArraySum } from "./fractions";
 
@@ -9,7 +9,6 @@ export const EPSILON = 0.0001
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-
 
 export const shuffleArray = <T>(array: T[]): T[] => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -176,4 +175,137 @@ export const getBlocks = (n: number): number[] => {
   newBlocks.push(Array(tens).fill(10))
   newBlocks.push(Array(hundreds).fill(100))
   return shuffleArray(newBlocks.flat()) 
+}
+
+export const getLength = (line: LineType): number => {
+  const { start, end } = line
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const d = Math.sqrt(dx*dx + dy*dy)
+  return d
+}
+
+export const getAngle = (line: LineType): number => {
+  const { start, end } = line
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const angle = Math.atan2(dy, dx)
+  // return angle in degrees
+  return angle * 180 / Math.PI
+}
+
+const isInsideLine = (p: Vertex, line: LineType): boolean => {
+  const { start, end } = line
+
+  const minX = Math.min(start.x, end.x)
+  const maxX = Math.max(start.x, end.x)
+  const minY = Math.min(start.y, end.y)
+  const maxY = Math.max(start.y, end.y)
+
+  return p.x > minX && p.x < maxX && p.y > minY && p.y < maxY
+}
+
+const isTerminalPoint = (p: Vertex, line: LineType): boolean => {
+  const { start, end } = line
+  return p.x === start.x && p.y === start.y || p.x === end.x && p.y === end.y
+}
+
+export const isSamePoints = (p1: Vertex, p2: Vertex): boolean => {
+  return (p1.x === p2.x && p1.y === p2.y)
+}
+
+const isSameLines = (line1: LineType, line2: LineType): boolean => {
+  return (
+    (isSamePoints(line1.start, line2.start) && isSamePoints(line1.end, line2.end)) ||
+    (isSamePoints(line1.end, line2.start) && isSamePoints(line1.start, line2.end))
+  )
+
+}
+
+export const isIntersectingLines = (line1: LineType, line2: LineType): boolean => {
+  
+  //find equations of both lines then find intersecting point
+  const { start: p1, end: p2 } = line1;
+  const { start: p3, end: p4 } = line2;
+
+  //TO BE PERFECTED
+
+  const a1 = p2.y - p1.y
+  const b1 = p1.x - p2.x
+  const c1 = a1 * p1.x + b1 * p1.y
+  const a2 = p4.y - p3.y
+  const b2 = p3.x - p4.x
+  const c2 = a2 * p3.x + b2 * p3.y
+  const determinant = a1 * b2 - a2 * b1
+  if (determinant === 0) {
+    return (
+      isInsideLine(p1, line2) ||
+      isInsideLine(p2, line2) ||
+      isInsideLine(p3, line1) ||
+      isInsideLine(p4, line1) ||
+      (isTerminalPoint(p1, line2) && isTerminalPoint(p2, line2)) ||
+      (isTerminalPoint(p3, line1) && isTerminalPoint(p4, line1))
+    )
+  }
+  const x = (b2 * c1 - b1 * c2) / determinant
+  const y = (a1 * c2 - a2 * c1) / determinant
+  const point = { x, y }
+
+  return (
+    ((a1 === 0 || a2 === 0) && (isInsideLine(point, line1) || isInsideLine(point, line2))) ||
+    ((b1 === 0 || b2 === 0) && (isInsideLine(point, line1) || isInsideLine(point, line2))) ||
+    (isInsideLine(point, line1) && isInsideLine(point, line2)) || 
+    (isTerminalPoint(point, line1) && isInsideLine(point, line2)) || 
+    (isInsideLine(point, line1) && isTerminalPoint(point, line2))
+  ) 
+  
+}
+
+export const MakePolygon = (coords: number[]): PolygonType => {
+  
+  const XCoords = coords.filter((coord, index) => index % 2 === 0)
+  const YCoords = coords.filter((coord, index) => index % 2 === 1)
+  
+  const points = XCoords.map((x, index) => ({
+    x: x,
+    y: YCoords[index]
+  }))
+  
+  return {
+    color: "#f200f2",
+    points
+  }
+}
+
+export const getPolygonLines = (points: Vertex[]): LineType[] => {
+  const lines: LineType[] = points.map((point, index) => {
+    const nextIndex = (index + 1) % points.length
+    const nextPoint = points[nextIndex]
+
+    return {
+      color: "#f200f2",
+      start: point,
+      end: nextPoint
+    }
+  })
+
+  return lines
+}
+
+export const canAddNewPoint = (polygon: PolygonType, newPoint: Vertex, index: number=-1): boolean => {
+  const { points } = polygon
+
+  const newPoints = [...points.slice(0, index + 1), newPoint, ...points.slice(index + 1)]
+
+  const lines = getPolygonLines(newPoints)
+
+  for (let i = 0; i < lines.length; i++) {
+    for (let j = i + 1; j < lines.length; j++) {
+      if (isIntersectingLines(lines[i], lines[j])) {
+        return false
+      }
+    }
+  }
+
+  return true
 }

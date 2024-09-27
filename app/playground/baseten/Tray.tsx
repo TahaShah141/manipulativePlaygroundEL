@@ -20,8 +20,8 @@ export const Tray: React.FC<TrayProps> = () => {
   }
 
   return (
-    <div onClick={() => setOpen(!open)} className={`fixed bottom-4 left-4 transition-transform duration-500 ${!open && "translate-y-full"}`}>
-      <div className='relative flex gap-4 p-4 bg-neutral-100 rounded-lg'>
+    <div onClick={() => setOpen(!open)} className={`fixed left-2 lg:left-4 xl:left-8 bottom-4 w-64 lg:w-72 xl:w-80 transition-transform duration-500 ${!open && "translate-y-full"}`}>
+      <div className='relative flex justify-between p-2 py-4 bg-neutral-100 rounded-lg'>
         <div className="absolute text-black top-0 right-0 -translate-y-1/2 bg-white flex justify-center items-center w-full rounded-lg">
           <ChevronUp className={`size-7 transition-transform duration-300 delay-200 ${open && "rotate-180"}`} />
         </div>

@@ -19,6 +19,9 @@ const config = {
       },
     },
     extend: {
+      screens: {
+        "xs": "400px",
+      },
       colors: {
         brown: "#9D4E4E",
         border: "hsl(var(--border))",

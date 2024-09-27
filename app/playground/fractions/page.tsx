@@ -12,7 +12,7 @@ export default function Fractions() {
 
   return (
     <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>
-      <div className="min-h-screen flex items-center bg-black p-16 gap-4 overflow-hidden">
+      <div className="h-screen flex items-center bg-black p-16 gap-4 overflow-hidden">
         <div className='flex w-full gap-4'>
           <Sidebar />
           <div className="flex items-start gap-4 flex-1">

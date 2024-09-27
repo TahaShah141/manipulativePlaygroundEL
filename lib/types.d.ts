@@ -23,3 +23,18 @@ export type NumberFraction = {
   numerator: number
   denominator: number
 }
+
+export type PolygonType = {
+  points: Vertex[]
+  color: string
+}
+
+export type LineType = {
+  start: Vertex
+  end: Vertex
+}
+
+export type Vertex = {
+  x: number
+  y: number
+}
