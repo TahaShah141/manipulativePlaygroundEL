@@ -3,7 +3,7 @@ import { Polygon } from "./Polygon"
 import { useState } from "react"
 import { GeoboardState } from "@/lib/redux/hooks"
 
-export const Board = () => {
+export const Geoboard = () => {
 
   const { N, polygons } = GeoboardState()
 
