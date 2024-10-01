@@ -29,7 +29,7 @@ export const useGeoboardDragAndDrop = () => {
         color,
         points: [
           {x, y},
-          {x: x === 0 ? 1 : x-1, y: y}
+          {x: x === N-1 ? x-1 : x+1, y: y}
         ]
       }
 

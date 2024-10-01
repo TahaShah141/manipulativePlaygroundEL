@@ -15,8 +15,13 @@ export default function GeoboardPage() {
   const dispatch = useAppDispatch()
   const { sensors, handleDragEnd } = useGeoboardDragAndDrop()
 
+  const handleDragOver = (event) => {
+
+    console.log(event)
+  }
+
   return (
-    <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>
+    <DndContext onDragOver={handleDragOver} onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>
       <div className="flex flex-col gap-2 p-4 overflow-hidden h-screen w-screen bg-black items-center justify-center">
         {/* <Pointer /> */}
         <div className="flex w-full justify-center gap-2">
