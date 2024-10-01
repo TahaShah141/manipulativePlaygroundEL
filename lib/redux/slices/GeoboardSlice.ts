@@ -32,7 +32,8 @@ export const GeoboardSlice = createSlice({
 })
 
 export const { 
-  
+  toggleFilled,
+  addPolygon
 } = GeoboardSlice.actions
 
 export default GeoboardSlice.reducer

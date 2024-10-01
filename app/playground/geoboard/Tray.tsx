@@ -25,10 +25,10 @@ const RubberBand: React.FC<RubberBandProps> = ({color}) => {
 
   const { attributes, listeners, setNodeRef: dragRef, transform, isDragging } = useDraggable({
     id: color, 
-    // data: {
-    //   type,
-    //   source
-    // }
+    data: {
+      color,
+      source: "tray"
+    }
   })
 
   const style: CSSProperties = {
@@ -37,7 +37,7 @@ const RubberBand: React.FC<RubberBandProps> = ({color}) => {
   }
 
   return (
-    <div ref={dragRef} {...attributes} {...listeners} style={style} className={`${isDragging ? "opacity-20 pointer-events-none" : ""} size-10 rounded-md`}>
+    <div ref={dragRef} {...attributes} {...listeners} style={style} className={`${isDragging ? "" : ""} size-10 rounded-md`}>
 
     </div>
   )

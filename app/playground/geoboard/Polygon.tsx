@@ -15,7 +15,7 @@ export const Polygon: React.FC<PolygonProps> = ({polygon}) => {
 
   return (
     <>
-    {filled && <Filling color={color} points={points} />}
+    <Filling color={color} points={points} />
     <Perimeter color={color} points={points} />
     </>
   )

@@ -1,4 +1,4 @@
-import { GeoboardState } from "@/lib/redux/hooks"
+import { GeoboardState, useAppDispatch } from "@/lib/redux/hooks"
 import { Vertex } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
 
@@ -9,7 +9,7 @@ type FillingProps = {
 
 export const Filling: React.FC<FillingProps> = ({color, points}) => {
   
-  const { N } = GeoboardState()
+  const { N, filled } = GeoboardState()
   const offset = {
     x: (100/N)/2,
     y: (100/N)/2
@@ -35,7 +35,7 @@ export const Filling: React.FC<FillingProps> = ({color, points}) => {
   ).join(' ');
 
   return (
-    <svg ref={svgRef} className="absolute" style={{width: "100%", height: "100%", top: 0, left: 0, pointerEvents: 'none' }}>
+    <svg ref={svgRef} className="absolute" style={{width: "100%", height: "100%", top: 0, left: 0, pointerEvents: 'none', opacity: filled ? 1 : 0}}>
       <polygon points={svgPoints} fill={color} fillOpacity={0.2} />
     </svg>
   )
