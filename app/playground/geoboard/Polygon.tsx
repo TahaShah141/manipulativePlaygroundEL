@@ -11,12 +11,12 @@ export const Polygon: React.FC<PolygonProps> = ({polygon}) => {
 
   const { filled } = GeoboardState()
 
-  const { points, color } = polygon
+  const {id, points, color } = polygon
 
   return (
     <>
     <Filling color={color} points={points} />
-    <Perimeter color={color} points={points} />
+    <Perimeter id={id} color={color} points={points} />
     </>
   )
 }

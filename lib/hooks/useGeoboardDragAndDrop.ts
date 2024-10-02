@@ -1,7 +1,8 @@
 import { DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { GeoboardState, useAppDispatch } from "../redux/hooks"
 import { PolygonType } from "../types"
-import { addPolygon } from "../redux/slices/GeoboardSlice"
+import { addPolygon, movePoint } from "../redux/slices/GeoboardSlice"
+import { v4 as randomID } from "uuid"
 
 export const useGeoboardDragAndDrop = () => {
 
@@ -22,10 +23,11 @@ export const useGeoboardDragAndDrop = () => {
     if (!over || !active.data.current || !over.data.current) return;
     
     const {x, y} = over.data.current
-    const {color, source} = active.data.current
+    const {color, source, polygonID, pointIndex} = active.data.current
 
     if (source === 'tray') {
     const polygon: PolygonType = {
+        id: randomID(),
         color,
         points: [
           {x, y},
@@ -34,6 +36,8 @@ export const useGeoboardDragAndDrop = () => {
       }
 
       dispatch(addPolygon({polygon}))
+    } else {
+      dispatch(movePoint({polygonID, pointIndex, x, y}))
     }
   }
 

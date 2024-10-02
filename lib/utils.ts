@@ -272,6 +272,7 @@ export const MakePolygon = (coords: number[]): PolygonType => {
   }))
   
   return {
+    id: randomID(),
     color: "#f200f2",
     points
   }

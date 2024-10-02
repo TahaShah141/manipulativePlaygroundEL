@@ -4,6 +4,7 @@ import { getAngle, getLength } from "@/lib/utils"
 import { useDraggable } from "@dnd-kit/core"
 
 type PerimeterProps = {
+  id: string
   color: string
   points: Vertex[]
 }
@@ -19,6 +20,8 @@ type LineProps = {
 }
 
 type PointProps = {
+  id: string
+  index: number
   vertex: Vertex,
   offset: {
     x: number
@@ -46,13 +49,15 @@ const Line: React.FC<LineProps> = ({line, offset, step, color}) => {
   )
 } 
 
-const Point: React.FC<PointProps> = ({color, offset, step, vertex}) => {
+const Point: React.FC<PointProps> = ({id, index, color, offset, step, vertex}) => {
 
   const { attributes, listeners, setNodeRef: dragRef, transform, isDragging } = useDraggable({
-    id: `point-${color}-${vertex.x}-${vertex.y}`, 
+    id: `${id}-${color}-${vertex.x}-${vertex.y}`, 
     data: {
       color,
-      source: vertex
+      source: vertex,
+      polygonID: id,
+      pointIndex: index
     }
   })
 
@@ -70,7 +75,7 @@ const Point: React.FC<PointProps> = ({color, offset, step, vertex}) => {
   )
 }
 
-export const Perimeter: React.FC<PerimeterProps> = ({color, points}) => {
+export const Perimeter: React.FC<PerimeterProps> = ({id, color, points}) => {
 
   const { N } = GeoboardState()
 
@@ -98,7 +103,7 @@ export const Perimeter: React.FC<PerimeterProps> = ({color, points}) => {
   return (
     <>
     {lines.map((line, i) => <Line key={`line-${i}`} color={color} line={line} offset={offset} step={step} />)}
-    {points.map((point, i) => <Point key={`point-${i}`} color={color} offset={offset} step={step} vertex={point} />)}
+    {points.map((point, i) => <Point id={id} key={`point-${i}`} color={color} offset={offset} step={step} vertex={point} index={i} />)}
     </>
   )
 }

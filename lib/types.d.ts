@@ -25,6 +25,7 @@ export type NumberFraction = {
 }
 
 export type PolygonType = {
+  id: string
   points: Vertex[]
   color: string
 }

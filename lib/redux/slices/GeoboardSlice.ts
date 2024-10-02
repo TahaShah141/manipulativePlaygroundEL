@@ -11,7 +11,7 @@ interface GeoboardState {
 const initialState: GeoboardState = {
   N: 10,
   polygons: [
-    MakePolygon([1, 2, 4, 2, 4, 6, 3, 5, 2, 4])
+    MakePolygon([4, 2, 2, 4, 6, 3, 5, 6])
   ],
   filled: true
 }
@@ -28,12 +28,23 @@ export const GeoboardSlice = createSlice({
       const { polygon } = action.payload
       state.polygons.push(polygon)
     },
+
+    movePoint: (state, action: PayloadAction<{polygonID: string, pointIndex: number, x: number, y: number}>) => {
+      const {x, y, polygonID, pointIndex} = action.payload
+      state.polygons.map(p => {
+        if (p.id === polygonID) {
+          p.points[pointIndex] = {x, y}
+        }
+        return p
+      })
+    },
   }
 })
 
 export const { 
   toggleFilled,
-  addPolygon
+  addPolygon,
+  movePoint
 } = GeoboardSlice.actions
 
 export default GeoboardSlice.reducer
