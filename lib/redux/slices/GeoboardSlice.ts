@@ -6,6 +6,8 @@ interface GeoboardState {
   N: number
   polygons: PolygonType[]
   filled: boolean
+  selectedPolygon?: string
+  selectedIndex?: number
 }
 
 const initialState: GeoboardState = {
@@ -24,19 +26,51 @@ export const GeoboardSlice = createSlice({
       state.filled = !state.filled
     },
 
+    selectPoint: (state, action: PayloadAction<{polygon: string, index: number}>) => {
+      const { polygon, index } = action.payload
+      state.selectedPolygon = polygon
+      state.selectedIndex = index
+    },
+
+    clearSelection: (state) => {
+      state.selectedPolygon = undefined
+      state.selectedIndex = undefined
+    },
+
     addPolygon: (state, action: PayloadAction<{polygon: PolygonType}>) => {
       const { polygon } = action.payload
       state.polygons.push(polygon)
     },
 
-    movePoint: (state, action: PayloadAction<{polygonID: string, pointIndex: number, x: number, y: number}>) => {
-      const {x, y, polygonID, pointIndex} = action.payload
-      state.polygons.map(p => {
-        if (p.id === polygonID) {
-          p.points[pointIndex] = {x, y}
+    movePoint: (state, action: PayloadAction<{x: number, y: number, dropped?: boolean}>) => {
+      const {x, y, dropped} = action.payload
+      const {selectedIndex, selectedPolygon} = state
+      if (!selectedPolygon || selectedIndex === undefined) return;
+
+      if (dropped) {
+        const polygonPoints = state.polygons.find(p => p.id === selectedPolygon)!.points
+        const leftPointIndex = selectedIndex === 0 ? polygonPoints.length - 1 : selectedIndex - 1
+        const rightPointIndex = selectedIndex === polygonPoints.length - 1 ? 0 : selectedIndex + 1
+
+        if ((polygonPoints[leftPointIndex].x === x && polygonPoints[leftPointIndex].y === y) || (polygonPoints[rightPointIndex].x === x && polygonPoints[rightPointIndex].y === y)) {
+          state.polygons = state.polygons.map(p => 
+            p.id === selectedPolygon ? 
+            ({
+              ...p,
+              points: p.points.filter((pt, i) => i !== selectedIndex)
+            }) : p
+          )
+          return;
         }
-        return p
-      })
+      }
+
+      state.polygons = state.polygons.map(p => 
+        p.id === selectedPolygon ? 
+        ({
+          ...p,
+          points: p.points.map((pt, i) => i === selectedIndex ? {x, y} : pt)
+        }) : p
+      )
     },
   }
 })
@@ -44,7 +78,9 @@ export const GeoboardSlice = createSlice({
 export const { 
   toggleFilled,
   addPolygon,
-  movePoint
+  movePoint,
+  selectPoint,
+  clearSelection
 } = GeoboardSlice.actions
 
 export default GeoboardSlice.reducer
