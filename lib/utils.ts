@@ -316,3 +316,19 @@ export const canAddNewPoint = (polygon: PolygonType, newPoint: Vertex, index: nu
 
   return true
 }
+
+export const getPolygonArea = (polygon: PolygonType): number => {
+  const { points } = polygon
+
+  let area = 0
+
+  // Loop through the points to apply the shoelace formula
+  for (let i = 0; i < points.length; i++) {
+    const {x: x1, y: y1} = points[i];
+    const {x: x2, y: y2} = points[(i + 1) % points.length]; // wrap around to the first point
+    area += x1 * y2 - y1 * x2;
+  }
+
+  // Return the absolute value of area divided by 2
+  return Math.abs(area) / 2;
+}

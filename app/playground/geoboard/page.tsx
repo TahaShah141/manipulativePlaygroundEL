@@ -5,15 +5,19 @@ import { useGeoboardDragAndDrop } from "@/lib/hooks/useGeoboardDragAndDrop";
 import { DndContext, DragOverEvent, pointerWithin } from "@dnd-kit/core";
 import { Tray } from "./Tray";
 import { Pointer } from "./Pointer";
-import { Button } from "@/components/ui/button";
-import { useAppDispatch } from "@/lib/redux/hooks";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { GeoboardState, useAppDispatch } from "@/lib/redux/hooks";
 import { clearBoard, toggleFilled } from "@/lib/redux/slices/GeoboardSlice";
+import { getPolygonArea } from "@/lib/utils";
 
 export default function GeoboardPage() {
 
   // const { mouseX, mouseY } = useMouseCoords()
+  const { polygons } = GeoboardState()
   const dispatch = useAppDispatch()
   const { sensors, handleDragEnd, handleDragOver, handleDragStart } = useGeoboardDragAndDrop()
+
+  const area = polygons.length > 0 ? getPolygonArea(polygons[0]) : -1
 
   return (
     <DndContext onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>
@@ -23,7 +27,8 @@ export default function GeoboardPage() {
           <Geoboard />
           <Tray />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          <div className={`${buttonVariants({ variant: "default" })} w-40`}>{area}</div>
           <Button className="w-40" onClick={() => dispatch(toggleFilled())}>Fill</Button>
           <Button className="w-40" onClick={() => dispatch(clearBoard())}>Clear</Button>
         </div>

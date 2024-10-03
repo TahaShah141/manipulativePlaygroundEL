@@ -36,7 +36,8 @@ export const Filling: React.FC<FillingProps> = ({color, points}) => {
 
   return (
     <svg ref={svgRef} className="absolute" style={{width: "100%", height: "100%", top: 0, left: 0, pointerEvents: 'none', opacity: filled ? 1 : 0}}>
-      <polygon points={svgPoints} fill={color} fillOpacity={0.2} />
+      <polygon points={svgPoints} fill={color} fillOpacity={0.2}>
+      </polygon>
     </svg>
   )
 }
