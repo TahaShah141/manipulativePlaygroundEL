@@ -1,5 +1,5 @@
 import { PolygonType } from "@/lib/types";
-import { MakePolygon } from "@/lib/utils";
+import { isSamePoints, MakePolygon, mod } from "@/lib/utils";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface GeoboardState {
@@ -13,9 +13,7 @@ interface GeoboardState {
 
 const initialState: GeoboardState = {
   N: 10,
-  polygons: [
-    MakePolygon([4, 2, 2, 4, 6, 3, 5, 6])
-  ],
+  polygons: [],
   filled: true
 }
 
@@ -25,6 +23,10 @@ export const GeoboardSlice = createSlice({
   reducers: {
     toggleFilled: (state) => {
       state.filled = !state.filled
+    },
+
+    clearBoard: (state) => {
+      state.polygons = []
     },
 
     selectType: (state, action: PayloadAction<{type: string}>) => {
@@ -73,7 +75,10 @@ export const GeoboardSlice = createSlice({
         const leftPointIndex = selectedIndex === 0 ? polygonPoints.length - 1 : selectedIndex - 1
         const rightPointIndex = selectedIndex === polygonPoints.length - 1 ? 0 : selectedIndex + 1
 
-        if ((polygonPoints[leftPointIndex].x === x && polygonPoints[leftPointIndex].y === y) || (polygonPoints[rightPointIndex].x === x && polygonPoints[rightPointIndex].y === y)) {
+        const isRightPoint = isSamePoints(polygonPoints[rightPointIndex], {x, y})
+        const isLeftPoint = isSamePoints(polygonPoints[leftPointIndex], {x, y})
+
+        if (isRightPoint || isLeftPoint) {
           state.polygons = state.polygons.map(p => 
             p.id === selectedPolygon ? 
             ({
@@ -81,8 +86,9 @@ export const GeoboardSlice = createSlice({
               points: p.points.filter((pt, i) => i !== selectedIndex)
             }) : p
           )
+          state.polygons = state.polygons.filter(p => p.points.length >= 2)
           return;
-        }
+        } 
       }
 
       state.polygons = state.polygons.map(p => 
@@ -103,7 +109,8 @@ export const {
   selectPoint,
   clearSelection,
   selectType,
-  addPoint
+  addPoint,
+  clearBoard
 } = GeoboardSlice.actions
 
 export default GeoboardSlice.reducer

@@ -21,12 +21,12 @@ export const useGeoboardDragAndDrop = () => {
     const { active } = event
     if (!active.data.current) return
     const {color, type, source, polygonID, pointIndex} = active.data.current
+    dispatch(selectType({type}))
     if (type === 'Vertex') {
-      dispatch(selectType({type:'Vertex'}))
       dispatch(selectPoint({polygon:polygonID, index:pointIndex}))
     } else if (type === 'Edge') {
-      dispatch(selectType({type:'Edge'}))
       dispatch(selectPoint({polygon:polygonID, index:pointIndex}))
+    } else {
     }
   }
 
@@ -53,7 +53,6 @@ export const useGeoboardDragAndDrop = () => {
     
     const {x, y} = over.data.current
     const {color} = active.data.current
-    console.log("DROPPED", {x, y})
     if (selectedType === 'Rubberband') {
     const polygon: PolygonType = {
         id: randomID(),

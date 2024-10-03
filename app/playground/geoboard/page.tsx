@@ -7,7 +7,7 @@ import { Tray } from "./Tray";
 import { Pointer } from "./Pointer";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/lib/redux/hooks";
-import { toggleFilled } from "@/lib/redux/slices/GeoboardSlice";
+import { clearBoard, toggleFilled } from "@/lib/redux/slices/GeoboardSlice";
 
 export default function GeoboardPage() {
 
@@ -23,7 +23,10 @@ export default function GeoboardPage() {
           <Geoboard />
           <Tray />
         </div>
-        <Button onClick={() => dispatch(toggleFilled())}>Fill</Button>
+        <div className="flex gap-2">
+          <Button className="w-40" onClick={() => dispatch(toggleFilled())}>Fill</Button>
+          <Button className="w-40" onClick={() => dispatch(clearBoard())}>Clear</Button>
+        </div>
       </div>
     </DndContext>
   );

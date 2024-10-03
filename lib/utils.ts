@@ -214,6 +214,12 @@ export const isSamePoints = (p1: Vertex, p2: Vertex): boolean => {
   return (p1.x === p2.x && p1.y === p2.y)
 }
 
+export const mod = (n: number, d: number): number => {
+  while (n < 0) {
+    n += d
+  } return n % d
+}
+
 const isSameLines = (line1: LineType, line2: LineType): boolean => {
   return (
     (isSamePoints(line1.start, line2.start) && isSamePoints(line1.end, line2.end)) ||

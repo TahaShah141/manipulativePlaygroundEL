@@ -85,7 +85,6 @@ const Point: React.FC<PointProps> = ({id, index, color, offset, step, vertex}) =
 
   return (
     <div ref={dragRef} {...attributes} {...listeners} className={`absolute size-4 rounded-full border-2 border-black`} style={style}>
-      {/* <p className="bg-white text-red-400">{index}</p> */}
     </div>
   )
 }
@@ -117,8 +116,8 @@ export const Perimeter: React.FC<PerimeterProps> = ({id, color, points}) => {
 
   return (
     <>
-    {lines.map((line, i) => <Line id={id} index={(i+1)%N} key={`line-${i}`} color={color} line={line} offset={offset} step={step} />)}
-    {points.map((point, i) => <Point id={id} key={`point-${i}`} color={color} offset={offset} step={step} vertex={point} index={i} />)}
+    {lines.map((line, i) => <Line id={id} index={(i+1)%N} key={Math.random()} color={color} line={line} offset={offset} step={step} />)}
+    {points.map((point, i) => <Point id={id} key={Math.random()} color={color} offset={offset} step={step} vertex={point} index={i} />)}
     </>
   )
 }
