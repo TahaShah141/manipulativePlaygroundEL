@@ -15,7 +15,9 @@ type LineProps = {
     y: number
   }
   color: string
+  id: string
   step: number
+  index: number
   line: LineType
 }
 
@@ -31,20 +33,32 @@ type PointProps = {
   step: number
 }
 
-const Line: React.FC<LineProps> = ({line, offset, step, color}) => {
+const Line: React.FC<LineProps> = ({id, index, line, offset, step, color}) => {
   const {start} = line
 
+  const { attributes, listeners, setNodeRef: dragRef, transform, isDragging } = useDraggable({
+    id: `Edge-${id}-${color}-${index}`, 
+    data: {
+      type: "Edge",
+      color,
+      polygonID: id,
+      pointIndex: index
+    }
+  })
+
+  const style = {
+    backgroundColor: color,
+    top: `calc(${offset.y + step*start.y}% - 4px)`, 
+    left: `${offset.x + step*start.x}%`,
+    width: `${getLength(line)*step}%`,
+    //transform origin at left most side but vertically centered
+    transformOrigin: '0% 50%',
+    transform: `rotate(${getAngle(line)}deg) `
+  }
+
   return (
-    <div className={`absolute opacity-50 h-2`}
-    style={{
-      backgroundColor: color,
-      top: `calc(${offset.y + step*start.y}% - 4px)`, 
-      left: `${offset.x + step*start.x}%`,
-      width: `${getLength(line)*step}%`,
-      //transform origin at left most side but vertically centered
-      transformOrigin: '0% 50%',
-      transform: `rotate(${getAngle(line)}deg)`
-    }}>
+    <div ref={dragRef} {...attributes} {...listeners} className={`absolute opacity-50 h-2`} style={style}>
+      {/* <p className="bg-white text-red-400 text-center">{index}</p> */}
     </div>
   )
 } 
@@ -54,6 +68,7 @@ const Point: React.FC<PointProps> = ({id, index, color, offset, step, vertex}) =
   const { attributes, listeners, setNodeRef: dragRef, transform, isDragging } = useDraggable({
     id: `${id}-${color}-${vertex.x}-${vertex.y}`, 
     data: {
+      type: "Vertex",
       color,
       source: vertex,
       polygonID: id,
@@ -70,7 +85,7 @@ const Point: React.FC<PointProps> = ({id, index, color, offset, step, vertex}) =
 
   return (
     <div ref={dragRef} {...attributes} {...listeners} className={`absolute size-4 rounded-full border-2 border-black`} style={style}>
-
+      {/* <p className="bg-white text-red-400">{index}</p> */}
     </div>
   )
 }
@@ -102,7 +117,7 @@ export const Perimeter: React.FC<PerimeterProps> = ({id, color, points}) => {
 
   return (
     <>
-    {lines.map((line, i) => <Line key={`line-${i}`} color={color} line={line} offset={offset} step={step} />)}
+    {lines.map((line, i) => <Line id={id} index={(i+1)%N} key={`line-${i}`} color={color} line={line} offset={offset} step={step} />)}
     {points.map((point, i) => <Point id={id} key={`point-${i}`} color={color} offset={offset} step={step} vertex={point} index={i} />)}
     </>
   )

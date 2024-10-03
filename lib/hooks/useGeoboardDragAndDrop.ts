@@ -1,12 +1,12 @@
 import { DragEndEvent, DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { GeoboardState, useAppDispatch } from "../redux/hooks"
 import { PolygonType } from "../types"
-import { addPolygon, clearSelection, movePoint, selectPoint } from "../redux/slices/GeoboardSlice"
+import { addPoint, addPolygon, clearSelection, movePoint, selectPoint, selectType } from "../redux/slices/GeoboardSlice"
 import { v4 as randomID } from "uuid"
 
 export const useGeoboardDragAndDrop = () => {
 
-  const { N } = GeoboardState()
+  const { N, selectedType } = GeoboardState()
   const dispatch = useAppDispatch()
 
   const sensors = useSensors(
@@ -20,8 +20,12 @@ export const useGeoboardDragAndDrop = () => {
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
     if (!active.data.current) return
-    const {color, source, polygonID, pointIndex} = active.data.current
-    if (source !== 'tray') {
+    const {color, type, source, polygonID, pointIndex} = active.data.current
+    if (type === 'Vertex') {
+      dispatch(selectType({type:'Vertex'}))
+      dispatch(selectPoint({polygon:polygonID, index:pointIndex}))
+    } else if (type === 'Edge') {
+      dispatch(selectType({type:'Edge'}))
       dispatch(selectPoint({polygon:polygonID, index:pointIndex}))
     }
   }
@@ -34,8 +38,11 @@ export const useGeoboardDragAndDrop = () => {
     const {x, y} = over.data.current
     const {color, source } = active.data.current
 
-    if (source !== 'tray') {
+    if (selectedType === "Vertex") {
       dispatch(movePoint({x, y}))
+    } if (selectedType === "Edge") {
+      dispatch(addPoint({x, y}))
+      dispatch(selectType({type:'Vertex'}))
     }
   }
 
@@ -45,9 +52,9 @@ export const useGeoboardDragAndDrop = () => {
     if (!over || !active.data.current || !over.data.current) return;
     
     const {x, y} = over.data.current
-    const {color, source, polygonID, pointIndex} = active.data.current
-
-    if (source === 'tray') {
+    const {color} = active.data.current
+    console.log("DROPPED", {x, y})
+    if (selectedType === 'Rubberband') {
     const polygon: PolygonType = {
         id: randomID(),
         color,
@@ -58,7 +65,7 @@ export const useGeoboardDragAndDrop = () => {
       }
 
       dispatch(addPolygon({polygon}))
-    } else {
+    } else if (selectedType === 'Vertex') {
       dispatch(movePoint({x, y, dropped:true}))
       dispatch(clearSelection())
     }

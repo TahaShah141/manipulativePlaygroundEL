@@ -6,6 +6,7 @@ interface GeoboardState {
   N: number
   polygons: PolygonType[]
   filled: boolean
+  selectedType?: string
   selectedPolygon?: string
   selectedIndex?: number
 }
@@ -26,10 +27,29 @@ export const GeoboardSlice = createSlice({
       state.filled = !state.filled
     },
 
+    selectType: (state, action: PayloadAction<{type: string}>) => {
+      state.selectedType = action.payload.type
+    },
+
     selectPoint: (state, action: PayloadAction<{polygon: string, index: number}>) => {
       const { polygon, index } = action.payload
       state.selectedPolygon = polygon
       state.selectedIndex = index
+    },
+    
+    addPoint: (state, action: PayloadAction<{x: number, y: number}>) => {
+      const { x, y } = action.payload
+      const { selectedPolygon, selectedIndex } = state
+
+      if (!selectedPolygon || selectedIndex === undefined) return;
+
+      //insert {x, y} after selectedIndex
+      state.polygons = state.polygons.map(p =>
+        p.id === selectedPolygon
+          ? {...p, 
+            points: [...p.points.slice(0, selectedIndex), {x, y}, ...p.points.slice(selectedIndex)]}
+          : p
+      )
     },
 
     clearSelection: (state) => {
@@ -45,6 +65,7 @@ export const GeoboardSlice = createSlice({
     movePoint: (state, action: PayloadAction<{x: number, y: number, dropped?: boolean}>) => {
       const {x, y, dropped} = action.payload
       const {selectedIndex, selectedPolygon} = state
+
       if (!selectedPolygon || selectedIndex === undefined) return;
 
       if (dropped) {
@@ -80,7 +101,9 @@ export const {
   addPolygon,
   movePoint,
   selectPoint,
-  clearSelection
+  clearSelection,
+  selectType,
+  addPoint
 } = GeoboardSlice.actions
 
 export default GeoboardSlice.reducer

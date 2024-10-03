@@ -26,8 +26,9 @@ const RubberBand: React.FC<RubberBandProps> = ({color}) => {
   const { attributes, listeners, setNodeRef: dragRef, transform, isDragging } = useDraggable({
     id: color, 
     data: {
+      type: "Rubberband",
       color,
-      source: "tray"
+      source: {x: -1, y: -1}
     }
   })
 
