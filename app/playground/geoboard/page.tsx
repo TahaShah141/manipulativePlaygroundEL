@@ -8,7 +8,7 @@ import { Pointer } from "./Pointer";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { GeoboardState, useAppDispatch } from "@/lib/redux/hooks";
 import { clearBoard, toggleFilled } from "@/lib/redux/slices/GeoboardSlice";
-import { getPolygonArea } from "@/lib/utils";
+import { copyToClipboard, getPolygonArea, getPolygonPointsJSON } from "@/lib/utils";
 
 export default function GeoboardPage() {
 
@@ -28,7 +28,7 @@ export default function GeoboardPage() {
           <Tray />
         </div>
         <div className="flex gap-2 items-center">
-          <div className={`${buttonVariants({ variant: "default" })} w-40`}>{area}</div>
+          <Button className="w-40" onClick={() => area > 0 && copyToClipboard(getPolygonPointsJSON(polygons[0]))}>{`Area: ${area}`}</Button>
           <Button className="w-40" onClick={() => dispatch(toggleFilled())}>Fill</Button>
           <Button className="w-40" onClick={() => dispatch(clearBoard())}>Clear</Button>
         </div>

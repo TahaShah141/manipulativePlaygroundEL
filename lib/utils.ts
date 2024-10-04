@@ -299,6 +299,15 @@ export const getPolygonLines = (points: Vertex[]): LineType[] => {
   return lines
 }
 
+export const getPolygonPointsJSON = (polygon: PolygonType): string => {
+  const { points } = polygon
+  return JSON.stringify(points, null, 2)
+}
+
+export const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text)
+}
+
 export const canAddNewPoint = (polygon: PolygonType, newPoint: Vertex, index: number=-1): boolean => {
   const { points } = polygon
 

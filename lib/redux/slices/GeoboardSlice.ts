@@ -13,7 +13,9 @@ interface GeoboardState {
 
 const initialState: GeoboardState = {
   N: 10,
-  polygons: [],
+  polygons: [
+    MakePolygon([4, 2, 5, 2, 6, 5, 2, 5, 2, 4, 7, 4, 4, 3])
+  ],
   filled: true
 }
 

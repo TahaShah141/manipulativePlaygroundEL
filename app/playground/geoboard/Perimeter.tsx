@@ -57,8 +57,8 @@ const Line: React.FC<LineProps> = ({id, index, line, offset, step, color}) => {
   }
 
   return (
-    <div ref={dragRef} {...attributes} {...listeners} className={`absolute opacity-50 h-2`} style={style}>
-      {/* <p className="bg-white text-red-400 text-center">{index}</p> */}
+    <div ref={dragRef} {...attributes} {...listeners} className={`absolute opacity-50 flex items-center text-black h-2`} style={style}>
+      {/* <p className="font-bold px-4">{index-1}</p> */}
     </div>
   )
 } 
@@ -77,14 +77,15 @@ const Point: React.FC<PointProps> = ({id, index, color, offset, step, vertex}) =
   })
 
   const style = {
-    transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
+    // transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
     backgroundColor: color, 
     top: `calc(${offset.y + step*vertex.y}% - 8px)`, 
     left: `calc(${offset.x + step*vertex.x}% - 8px)`
   }
 
   return (
-    <div ref={dragRef} {...attributes} {...listeners} className={`absolute size-4 rounded-full border-2 border-black`} style={style}>
+    <div ref={dragRef} {...attributes} {...listeners} className={`absolute size-4 rounded-full border-2 flex justify-center items-center text-black text-[10px] border-black`} style={style}>
+      {/* <p className="font-bold">{index}</p> */}
     </div>
   )
 }
