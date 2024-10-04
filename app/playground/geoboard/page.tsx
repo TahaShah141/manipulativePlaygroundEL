@@ -28,7 +28,7 @@ export default function GeoboardPage() {
           <Tray />
         </div>
         <div className="flex gap-2 items-center">
-          <Button className="w-40" onClick={() => area > 0 && copyToClipboard(getPolygonPointsJSON(polygons[0]))}>{`Area: ${area}`}</Button>
+          <Button className="w-40" onClick={() => area >= 0 && copyToClipboard(getPolygonPointsJSON(polygons[0]))}>{`Area: ${area}`}</Button>
           <Button className="w-40" onClick={() => dispatch(toggleFilled())}>Fill</Button>
           <Button className="w-40" onClick={() => dispatch(clearBoard())}>Clear</Button>
         </div>
