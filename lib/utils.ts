@@ -33,7 +33,7 @@ export const newRandomFraction = (upper: number, N: number = 12): NumberFraction
     // }
     // if (getFractionArraySum(sum) <= upper) return sum
     
-    const denominator = randInt(12, 1)
+    const denominator = randInt(13, 1)
     const numerator = randInt(denominator, 1)
     return Array.from({length: numerator}, () => ({numerator: 1, denominator}))
   }
@@ -41,7 +41,7 @@ export const newRandomFraction = (upper: number, N: number = 12): NumberFraction
 }
 
 export const randInt = (n: number, min: number = 0): number => {
-  return Math.floor(Math.random() * n) + min
+  return Math.floor(Math.random() * (n-min)) + min
 }
 
 export const getRandomTriangularInt = (N: number): number => {
@@ -340,4 +340,65 @@ export const getPolygonArea = (polygon: PolygonType): number => {
 
   // Return the absolute value of area divided by 2
   return Math.abs(area) / 2;
+}
+
+export const getRandomShape = (N: number, numPoints: number): Vertex[] => {
+  // Ensure there are at least 3 points to form a polygon
+  if (numPoints < 3) {
+    throw new Error("A polygon requires at least 3 points.");
+  }
+
+  // Use a Set to track unique coordinates
+  const uniquePoints = new Set<string>();
+  const points: Vertex[] = [];
+
+  // Generate random points in the grid
+  while (points.length < numPoints) {
+    const x = Math.floor(Math.random() * N);
+    const y = Math.floor(Math.random() * N);
+    const key = `${x},${y}`;
+
+    // Check if the point is unique
+    if (!uniquePoints.has(key)) {
+      uniquePoints.add(key);
+      points.push({ x, y });
+    }
+  }
+
+  // Sort points by angle from the centroid to ensure they form a convex polygon
+  const centroid = getCentroid(points);
+  points.sort((a, b) => {
+    const angleA = Math.atan2(a.y - centroid.y, a.x - centroid.x);
+    const angleB = Math.atan2(b.y - centroid.y, b.x - centroid.x);
+    return angleA - angleB;
+  });
+
+  return points;
+};
+
+export const flattenPoints = (points: Vertex[]): number[] => {
+  const pointsX = points.map(point => point.x)
+  const pointsY = points.map(point => point.y)
+
+  const toReturn: number[] = []
+
+  for (let i = 0; i < points.length; i++) {
+    toReturn.push(pointsX[i])
+    toReturn.push(pointsY[i])
+  }
+
+  return toReturn
+}
+
+const getCentroid = (points: Vertex[]): Vertex => {
+  const sum = points.reduce((acc, point) => {
+    acc.x += point.x;
+    acc.y += point.y;
+    return acc;
+  }, { x: 0, y: 0 });
+
+  return {
+    x: sum.x / points.length,
+    y: sum.y / points.length
+  };
 }

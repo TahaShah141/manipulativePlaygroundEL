@@ -7,7 +7,7 @@ import { Tray } from "./Tray";
 import { Pointer } from "./Pointer";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { GeoboardState, useAppDispatch } from "@/lib/redux/hooks";
-import { clearBoard, toggleFilled } from "@/lib/redux/slices/GeoboardSlice";
+import { addRandomShape, clearBoard, toggleFilled } from "@/lib/redux/slices/GeoboardSlice";
 import { copyToClipboard, getPolygonArea, getPolygonPointsJSON } from "@/lib/utils";
 
 export default function GeoboardPage() {
@@ -31,6 +31,7 @@ export default function GeoboardPage() {
           <Button className="w-40" onClick={() => area >= 0 && copyToClipboard(getPolygonPointsJSON(polygons[0]))}>{`Area: ${area}`}</Button>
           <Button className="w-40" onClick={() => dispatch(toggleFilled())}>Fill</Button>
           <Button className="w-40" onClick={() => dispatch(clearBoard())}>Clear</Button>
+          <Button className="w-40" onClick={() => dispatch(addRandomShape())}>Random Shape</Button>
         </div>
       </div>
     </DndContext>

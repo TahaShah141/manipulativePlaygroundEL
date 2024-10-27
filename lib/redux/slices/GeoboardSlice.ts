@@ -1,5 +1,5 @@
 import { PolygonType } from "@/lib/types";
-import { isSamePoints, MakePolygon, mod } from "@/lib/utils";
+import { flattenPoints, getRandomShape, isSamePoints, MakePolygon, mod, randInt } from "@/lib/utils";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface GeoboardState {
@@ -101,6 +101,12 @@ export const GeoboardSlice = createSlice({
         }) : p
       )
     },
+
+    addRandomShape: (state) => {
+
+      const size = randInt(state.N, 4)
+      state.polygons = [MakePolygon(flattenPoints(getRandomShape(size, randInt(6, 3))))]
+    }
   }
 })
 
@@ -112,7 +118,8 @@ export const {
   clearSelection,
   selectType,
   addPoint,
-  clearBoard
+  clearBoard,
+  addRandomShape
 } = GeoboardSlice.actions
 
 export default GeoboardSlice.reducer
