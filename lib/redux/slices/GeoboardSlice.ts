@@ -9,6 +9,7 @@ interface GeoboardState {
   selectedType?: string
   selectedPolygon?: string
   selectedIndex?: number
+  mode: string
 }
 
 const initialState: GeoboardState = {
@@ -16,13 +17,27 @@ const initialState: GeoboardState = {
   polygons: [
     MakePolygon([4, 2, 5, 2, 6, 5, 2, 5, 2, 4, 7, 4, 4, 3])
   ],
-  filled: true
+  filled: true,
+  mode: 'sandbox'
 }
 
 export const GeoboardSlice = createSlice({
   name: "geobaord",
   initialState,
   reducers: {
+    changeMode: (state, action: PayloadAction<{mode: string}>) => {
+      const { mode } = action.payload
+      state.mode = mode
+
+      const size = randInt(state.N, 4)
+
+      if (mode === 'sandbox') {
+        state.polygons = []
+      } else if (mode === 'area' || mode === 'perimeter') {
+        state.polygons = [MakePolygon(flattenPoints(getRandomShape(size, randInt(6, 3), mode === 'perimeter')))]
+      }
+    },
+
     toggleFilled: (state) => {
       state.filled = !state.filled
     },
@@ -105,7 +120,7 @@ export const GeoboardSlice = createSlice({
     addRandomShape: (state) => {
 
       const size = randInt(state.N, 4)
-      state.polygons = [MakePolygon(flattenPoints(getRandomShape(size, randInt(6, 3))))]
+      state.polygons = [MakePolygon(flattenPoints(getRandomShape(size, randInt(6, 3), state.mode === 'perimeter')))]
     }
   }
 })
@@ -119,7 +134,8 @@ export const {
   selectType,
   addPoint,
   clearBoard,
-  addRandomShape
+  addRandomShape,
+  changeMode
 } = GeoboardSlice.actions
 
 export default GeoboardSlice.reducer

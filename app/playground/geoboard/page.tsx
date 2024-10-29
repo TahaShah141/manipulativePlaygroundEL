@@ -9,6 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { GeoboardState, useAppDispatch } from "@/lib/redux/hooks";
 import { addRandomShape, clearBoard, toggleFilled } from "@/lib/redux/slices/GeoboardSlice";
 import { copyToClipboard, getPolygonArea, getPolygonPointsJSON } from "@/lib/utils";
+import { Sidebar } from "./Sidebar";
 
 export default function GeoboardPage() {
 
@@ -21,17 +22,12 @@ export default function GeoboardPage() {
 
   return (
     <DndContext onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} collisionDetection={pointerWithin} sensors={sensors}>
-      <div className="flex flex-col gap-2 p-4 overflow-hidden h-screen w-screen bg-black items-center justify-center">
+      <div className="flex gap-2 p-4 overflow-hidden h-screen w-screen bg-black items-center justify-center">
         {/* <Pointer /> */}
-        <div className="flex w-full justify-center gap-2">
+        <Sidebar />
+        <div className="flex items-center gap-2">
           <Geoboard />
           <Tray />
-        </div>
-        <div className="flex gap-2 items-center">
-          <Button className="w-40" onClick={() => area >= 0 && copyToClipboard(getPolygonPointsJSON(polygons[0]))}>{`Area: ${area}`}</Button>
-          <Button className="w-40" onClick={() => dispatch(toggleFilled())}>Fill</Button>
-          <Button className="w-40" onClick={() => dispatch(clearBoard())}>Clear</Button>
-          <Button className="w-40" onClick={() => dispatch(addRandomShape())}>Random Shape</Button>
         </div>
       </div>
     </DndContext>

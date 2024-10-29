@@ -342,7 +342,7 @@ export const getPolygonArea = (polygon: PolygonType): number => {
   return Math.abs(area) / 2;
 }
 
-export const getRandomShape = (N: number, numPoints: number): Vertex[] => {
+export const getRandomShape = (N: number, numPoints: number, rigid: boolean=false): Vertex[] => {
   // Ensure there are at least 3 points to form a polygon
   if (numPoints < 3) {
     throw new Error("A polygon requires at least 3 points.");
@@ -373,7 +373,12 @@ export const getRandomShape = (N: number, numPoints: number): Vertex[] => {
     return angleA - angleB;
   });
 
-  return points;
+  // console.log({
+  //   points,
+  //   rigid: makeRigid(points)
+  // })
+
+  return rigid ? makeRigid(points) : points;
 };
 
 export const flattenPoints = (points: Vertex[]): number[] => {
@@ -389,6 +394,25 @@ export const flattenPoints = (points: Vertex[]): number[] => {
 
   return toReturn
 }
+
+const makeRigid = (points: Vertex[]): Vertex[] => {
+  return points;
+  const rigidPoints: Vertex[] = [];
+
+  for (let i = 0; i < points.length; i++) {
+    const current = points[i];
+    const next = points[(i + 1) % points.length]; // Wrap around to the start for the last point
+
+    // Add the current point to the rigid points list
+    rigidPoints.push(current);
+
+    // Create a new point with x from current and y from next
+    const newPoint = { x: current.x, y: next.y };
+    if (!(newPoint.x === next.x || newPoint.y === current.y))rigidPoints.push(newPoint);
+  }
+
+  return rigidPoints;
+};
 
 const getCentroid = (points: Vertex[]): Vertex => {
   const sum = points.reduce((acc, point) => {
